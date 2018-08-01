@@ -49,6 +49,10 @@ contract FlopTest is DSTest {
     Guy  bob;
     Gal  gal;
 
+    function rad(int wad) internal pure returns (int) {
+        return wad * 10 ** 27;
+    }
+
     function kiss(uint) public pure { }  // arbitrary callback
 
     function setUp() public {
@@ -76,7 +80,7 @@ contract FlopTest is DSTest {
         assertEq(gem.balanceOf(this),   0 ether);
         fuss.kick({ lot: uint(-1)   // or whatever high starting value
                   , gal: gal
-                  , bid: 0
+                  , bid: rad(0)
                   });
         // no value transferred
         assertEq(pie.balanceOf(this), 600 ether);
@@ -85,16 +89,16 @@ contract FlopTest is DSTest {
     function test_dent() public {
         uint id = fuss.kick({ lot: uint(-1)   // or whatever high starting value
                             , gal: gal
-                            , bid: 10 ether
+                            , bid: rad(10 ether)
                             });
 
-        ali.dent(id, 100 ether, 10 ether);
+        ali.dent(id, 100 ether, rad(10 ether));
         // bid taken from bidder
         assertEq(pie.balanceOf(ali), 190 ether);
         // gal receives payment
         assertEq(pie.balanceOf(gal),  10 ether);
 
-        bob.dent(id, 80 ether, 10 ether);
+        bob.dent(id, 80 ether, rad(10 ether));
         // bid taken from bidder
         assertEq(pie.balanceOf(bob), 190 ether);
         // prev bidder refunded

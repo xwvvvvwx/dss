@@ -23,12 +23,12 @@ contract Cat {
     address public vat;
     address public lad;
     address public vow;
-    uint256 public lump;  // fixed lot size
+    uint256 public lump;  // rad // fixed lot size
 
     modifier auth { _; }  // todo: require(msg.sender == root);
 
     struct Ilk {
-        int256  chop;
+        int256  chop;  // ray
         address flip;
     }
     mapping (bytes32 => Ilk) public ilks;
@@ -37,7 +37,7 @@ contract Cat {
         bytes32 ilk;
         address lad;
         uint256 ink;
-        uint256 tab;
+        uint256 tab;  // rad
     }
     Flip[] public flips;
 
@@ -61,9 +61,9 @@ contract Cat {
         (int rate, int Art)           = VatLike(vat).ilks(ilk); Art;
         (int spot, int line)          = LadLike(lad).ilks(ilk); line;
         (int gem , int ink , int art) = VatLike(vat).urns(ilk, guy); gem;
-        int tab = rmul(art, rate);
+        int tab = mul(art, rate);
 
-        require(rmul(ink, spot) < tab);  // !safe
+        require(mul(ink, spot) < tab);  // !safe
 
         VatLike(vat).grab(ilk, guy, vow, -ink, -art);
         VowLike(vow).fess(uint(tab));
@@ -71,29 +71,38 @@ contract Cat {
         return flips.push(Flip(ilk, guy, uint(ink), uint(tab))) - 1;
     }
 
-    function flip(uint n, uint wad) public returns (uint) {
+    function flip(uint n, uint rad) public returns (uint) {
         Flip storage f = flips[n];
         Ilk  storage i = ilks[f.ilk];
 
-        require(wad <= f.tab);
-        require(wad == lump || (wad < lump && wad == f.tab));
+        require(rad <= f.tab);
+        require(rad == lump || (rad < lump && rad == f.tab));
 
         uint tab = f.tab;
-        uint ink = f.ink * wad / tab;
+        uint ink = f.ink * rad / tab;
 
-        f.tab -= wad;
+        f.tab -= rad;
         f.ink -= ink;
 
         return Flippy(i.flip).kick({ lad: f.lad
                                    , gal: vow
-                                   , tab: uint(rmul(int(wad), i.chop))
+                                   , tab: uint(rmul(int(rad), i.chop))
                                    , lot: uint(ink)
                                    , bid: uint(0)
                                    });
     }
 
+    function mul(int x, int y) internal pure returns (int z) {
+        z = x * y;
+        require(y >= 0 || x != -2**255);
+        require(y == 0 || z / y == x);
+    }
+
     int constant RAY = 10 ** 27;
     function rmul(int x, int y) internal pure returns (int z) {
-        z = x * y / RAY;
+        z = x * y;
+        require(y >= 0 || x != -2**255);
+        require(y == 0 || z / y == x);
+	z = z / RAY;
     }
 }

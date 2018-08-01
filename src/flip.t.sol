@@ -53,12 +53,12 @@ contract Vat is VatLike {
         gems[lad] += jam;
         ilk;
     }
-    function move(address src, address dst, uint wad) public {
-        dai[src] -= wad;
-        dai[dst] += wad;
+    function move(address src, address dst, uint rad) public {
+        dai[src] -= rad;
+        dai[dst] += rad;
     }
-    function suck(address guy, uint wad) public {
-        dai[guy] += wad;
+    function suck(address guy, uint rad) public {
+        dai[guy] += rad;
     }
 }
 
@@ -80,6 +80,10 @@ contract FlipTest is DSTest {
     Gal  gal;
     Vat  vat;
 
+    function rad(int wad) internal pure returns (int) {
+        return wad * 10 ** 27;
+    }
+
     function setUp() public {
         vat = new Vat();
         pie = new Dai20(vat);
@@ -93,17 +97,17 @@ contract FlipTest is DSTest {
 
         pie.approve(flip);
 
-        vat.suck(this, 1000 ether);
+        vat.suck(this, rad(1000 ether));
 
         pie.push(ali, 200 ether);
         pie.push(bob, 200 ether);
     }
     function test_kick() public {
         flip.kick({ lot: 100 ether
-                  , tab: 50 ether
+                  , tab: rad(50 ether)
                   , lad: address(0xacab)
                   , gal: gal
-                  , bid: 0
+                  , bid: rad(0)
                   });
     }
     function testFail_tend_empty() public {
@@ -112,19 +116,19 @@ contract FlipTest is DSTest {
     }
     function test_tend() public {
         uint id = flip.kick({ lot: 100 ether
-                            , tab: 50 ether
+                            , tab: rad(50 ether)
                             , lad: address(0xacab)
                             , gal: gal
-                            , bid: 0
+                            , bid: rad(0)
                             });
 
-        ali.tend(id, 100 ether, 1 ether);
+        ali.tend(id, 100 ether, rad(1 ether));
         // bid taken from bidder
         assertEq(pie.balanceOf(ali),   199 ether);
         // gal receives payment
         assertEq(pie.balanceOf(gal),     1 ether);
 
-        bob.tend(id, 100 ether, 2 ether);
+        bob.tend(id, 100 ether, rad(2 ether));
         // bid taken from bidder
         assertEq(pie.balanceOf(bob), 198 ether);
         // prev bidder refunded
@@ -139,14 +143,14 @@ contract FlipTest is DSTest {
     }
     function test_tend_later() public {
         uint id = flip.kick({ lot: 100 ether
-                            , tab: 50 ether
+                            , tab: rad(50 ether)
                             , lad: address(0xacab)
                             , gal: gal
                             , bid: 0
                             });
         flip.warp(5 hours);
 
-        ali.tend(id, 100 ether, 1 ether);
+        ali.tend(id, 100 ether, rad(1 ether));
         // bid taken from bidder
         assertEq(pie.balanceOf(ali), 199 ether);
         // gal receives payment
@@ -154,15 +158,15 @@ contract FlipTest is DSTest {
     }
     function test_dent() public {
         uint id = flip.kick({ lot: 100 ether
-                            , tab: 50 ether
+                            , tab: rad(50 ether)
                             , lad: address(0xacab)
                             , gal: gal
-                            , bid: 0
+                            , bid: rad(0)
                             });
-        ali.tend(id, 100 ether,  1 ether);
-        bob.tend(id, 100 ether, 50 ether);
+        ali.tend(id, 100 ether,  rad(1 ether));
+        bob.tend(id, 100 ether, rad(50 ether));
 
-        ali.dent(id,  95 ether, 50 ether);
+        ali.dent(id,  95 ether, rad(50 ether));
         // plop the gems
         assertEq(vat.gems(0xacab), 5 ether);
         assertEq(pie.balanceOf(ali),  150 ether);
@@ -170,49 +174,49 @@ contract FlipTest is DSTest {
     }
     function test_beg() public {
         uint id = flip.kick({ lot: 100 ether
-                            , tab: 50 ether
+                            , tab: rad(50 ether)
                             , lad: address(0xacab)
                             , gal: gal
-                            , bid: 0
+                            , bid: rad(0)
                             });
-        assertTrue( ali.try_tend(id, 100 ether, 1.00 ether));
-        assertTrue(!bob.try_tend(id, 100 ether, 1.01 ether));
+        assertTrue( ali.try_tend(id, 100 ether, rad(1.00 ether)));
+        assertTrue(!bob.try_tend(id, 100 ether, rad(1.01 ether)));
         // high bidder is subject to beg
-        assertTrue(!ali.try_tend(id, 100 ether, 1.01 ether));
-        assertTrue( bob.try_tend(id, 100 ether, 1.07 ether));
+        assertTrue(!ali.try_tend(id, 100 ether, rad(1.01 ether)));
+        assertTrue( bob.try_tend(id, 100 ether, rad(1.07 ether)));
 
         // can bid by less than beg at flip
-        assertTrue( ali.try_tend(id, 100 ether, 49 ether));
-        assertTrue( bob.try_tend(id, 100 ether, 50 ether));
+        assertTrue( ali.try_tend(id, 100 ether, rad(49 ether)));
+        assertTrue( bob.try_tend(id, 100 ether, rad(50 ether)));
 
-        assertTrue(!ali.try_dent(id, 100 ether, 50 ether));
-        assertTrue(!ali.try_dent(id,  99 ether, 50 ether));
-        assertTrue( ali.try_dent(id,  95 ether, 50 ether));
+        assertTrue(!ali.try_dent(id, 100 ether, rad(50 ether)));
+        assertTrue(!ali.try_dent(id,  99 ether, rad(50 ether)));
+        assertTrue( ali.try_dent(id,  95 ether, rad(50 ether)));
     }
     function test_deal() public {
         uint id = flip.kick({ lot: 100 ether
-                            , tab: 50 ether
+                            , tab: rad(50 ether)
                             , lad: address(0xacab)
                             , gal: gal
-                            , bid: 0
+                            , bid: rad(0)
                             });
 
         // only after ttl
-        ali.tend(id, 100 ether, 1 ether);
+        ali.tend(id, 100 ether, rad(1 ether));
         assertTrue(!bob.try_deal(id));
         flip.warp(4.1 hours);
         assertTrue( bob.try_deal(id));
 
         uint ie = flip.kick({ lot: 100 ether
-                            , tab: 50 ether
+                            , tab: rad(50 ether)
                             , lad: address(0xacab)
                             , gal: gal
-                            , bid: 0
+                            , bid: rad(0)
                             });
 
         // or after end
         flip.warp(1 weeks);
-        ali.tend(ie, 100 ether, 1 ether);
+        ali.tend(ie, 100 ether, rad(1 ether));
         assertTrue(!bob.try_deal(ie));
         flip.warp(1.1 weeks);
         assertTrue( bob.try_deal(ie));
@@ -220,19 +224,19 @@ contract FlipTest is DSTest {
     function test_tick() public {
         // start an auction
         uint id = flip.kick({ lot: 100 ether
-                            , tab: 50 ether
+                            , tab: rad(50 ether)
                             , lad: address(0xacab)
                             , gal: gal
-                            , bid: 0
+                            , bid: rad(0)
                             });
         // check no tick
         assertTrue(!ali.try_tick(id));
         // run past the end
         flip.warp(2 weeks);
         // check not biddable
-        assertTrue(!ali.try_tend(id, 100 ether, 1 ether));
+        assertTrue(!ali.try_tend(id, 100 ether, rad(1 ether)));
         assertTrue(ali.try_tick(id));
         // check biddable
-        assertTrue( ali.try_tend(id, 100 ether, 1 ether));
+        assertTrue( ali.try_tend(id, 100 ether, rad(1 ether)));
     }
 }

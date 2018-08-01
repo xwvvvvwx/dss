@@ -21,6 +21,10 @@ contract VowTest is DSTest {
     Flap flap;
     Gem  gov;
 
+    function rad(int wad) internal pure returns (int) {
+        return wad * 10 ** 27;
+    }
+
     function setUp() public {
         vat = new Vat();
         vow = new Vow(vat);
@@ -32,7 +36,7 @@ contract VowTest is DSTest {
 
         vow.file("flop", address(flop));
         vow.file("flap", address(flap));
-        vow.file("lump", uint256(100 ether));
+        vow.file("lump", uint256(rad(100 ether)));
     }
 
     function try_flop() internal returns (bool) {
@@ -49,7 +53,7 @@ contract VowTest is DSTest {
     }
 
     function grab(uint wad) internal {
-        vow.fess(wad);
+        vow.fess(rad(wad));
         vat.file('', 'rate', 10 ** 27);
         vat.grab('', address(vat), vow, 0, -int(wad));
     }
@@ -67,36 +71,36 @@ contract VowTest is DSTest {
     function test_no_flop_pending_joy() public {
         flog(200 ether);
 
-        vat.mint(vow, 100 ether);
+        vat.mint(vow, rad(100 ether));
         assertTrue(!try_flop() );
 
-        vow.heal(100 ether);
+        vow.heal(rad(100 ether));
         assertTrue( try_flop() );
     }
 
     function test_flap() public {
-        vat.mint(vow, 100 ether);
+        vat.mint(vow, rad(100 ether));
         assertTrue( try_flap() );
     }
 
     function test_no_flap_pending_sin() public {
-        vow.file("lump", uint256(0 ether));
+        vow.file("lump", uint256(rad(0 ether)));
         grab(100 ether);
 
-        vat.mint(vow, 50 ether);
+        vat.mint(vow, rad(50 ether));
         assertTrue(!try_flap() );
     }
     function test_no_flap_nonzero_woe() public {
-        vow.file("lump", uint256(0 ether));
+        vow.file("lump", uint256(rad(0 ether)));
         flog(100 ether);
-        vat.mint(vow, 50 ether);
+        vat.mint(vow, rad(50 ether));
         assertTrue(!try_flap() );
     }
     function test_no_flap_pending_flop() public {
         flog(100 ether);
         vow.flop();
 
-        vat.mint(vow, 100 ether);
+        vat.mint(vow, rad(100 ether));
 
         assertTrue(!try_flap() );
     }
@@ -104,8 +108,8 @@ contract VowTest is DSTest {
         flog(100 ether);
         uint id = vow.flop();
 
-        vat.mint(this, 100 ether);
-        flop.dent(id, 0 ether, 100 ether);
+        vat.mint(this, rad(100 ether));
+        flop.dent(id, 0 ether, rad(100 ether));
 
         assertTrue(!try_flap() );
     }
@@ -113,9 +117,9 @@ contract VowTest is DSTest {
     function test_no_surplus_after_good_flop() public {
         flog(100 ether);
         uint id = vow.flop();
-        vat.mint(this, 100 ether);
+        vat.mint(this, rad(100 ether));
 
-        flop.dent(id, 0 ether, 100 ether);  // flop succeeds..
+        flop.dent(id, 0 ether, rad(100 ether));  // flop succeeds..
 
         assertTrue(!try_flap() );
     }
@@ -124,10 +128,10 @@ contract VowTest is DSTest {
         flog(100 ether);
         uint id = vow.flop();
 
-        vat.mint(this, 100 ether);
-        assertTrue(try_dent(id, 2 ether,  100 ether));
+        vat.mint(this, rad(100 ether));
+        assertTrue(try_dent(id, 2 ether,  rad(100 ether)));
 
-        vat.mint(this, 100 ether);
-        assertTrue(try_dent(id, 1 ether,  100 ether));
+        vat.mint(this, rad(100 ether));
+        assertTrue(try_dent(id, 1 ether,  rad(100 ether)));
     }
 }

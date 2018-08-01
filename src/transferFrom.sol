@@ -12,11 +12,13 @@ contract Dai20 {
     VatLike public vat;
     constructor(address vat_) public  { vat = VatLike(vat_); }
 
+    int constant RAY = 10 ** 27;
+
     function balanceOf(address guy) public view returns (uint) {
-        return uint(vat.dai(guy));
+        return uint(vat.dai(guy)) / RAY;
     }
     function totalSupply() public view returns (uint) {
-        return vat.Tab();
+        return vat.Tab() / RAY;
     }
 
     event Approval(address src, address dst, uint wad);
@@ -37,7 +39,7 @@ contract Dai20 {
             require(allowance[src][msg.sender] >= wad);
             allowance[src][msg.sender] -= wad;
         }
-        vat.move(src, dst, wad);
+        vat.move(src, dst, wad * RAY);
         emit Transfer(src, dst, wad);
         return true;
     }

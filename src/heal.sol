@@ -20,13 +20,13 @@ contract Vow {
     constructor(address vat_) public { vat = vat_; }
 
     mapping (uint48 => uint256) public sin; // debt queue
-    uint256 public Sin;   // queued debt
-    uint256 public Woe;   // pre-auction 'bad' debt
-    uint256 public Ash;   // on-auction debt
+    uint256 public Sin;   // rad // queued debt
+    uint256 public Woe;   // rad // pre-auction 'bad' debt
+    uint256 public Ash;   // rad // on-auction debt
 
     uint256 public wait;  // todo: flop delay
-    uint256 public lump;  // fixed lot size
-    uint256 public pad;   // surplus buffer
+    uint256 public lump;  // rad // fixed lot size
+    uint256 public pad;   // rad // surplus buffer
 
     function Awe() public view returns (uint) { return Sin + Woe + Ash; }
     function Joy() public view returns (uint) { return uint(DaiLike(vat).dai(this)); }
@@ -40,15 +40,15 @@ contract Vow {
         if (what == "flop") row = fuss;
     }
 
-    function heal(uint wad) public {
-        require(wad <= Joy() && wad <= Woe);
-        Woe -= wad;
-        DaiLike(vat).heal(this, this, int(wad));
+    function heal(uint rad) public {
+        require(rad <= Joy() && rad <= Woe);
+        Woe -= rad;
+        DaiLike(vat).heal(this, this, int(rad));
     }
-    function kiss(uint wad) public {
-        require(wad <= Ash && wad <= Joy());
-        Ash -= wad;
-        DaiLike(vat).heal(this, this, int(wad));
+    function kiss(uint rad) public {
+        require(rad <= Ash && rad <= Joy());
+        Ash -= rad;
+        DaiLike(vat).heal(this, this, int(rad));
     }
 
     function fess(uint tab) public auth {

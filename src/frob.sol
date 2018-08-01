@@ -7,7 +7,7 @@ import './tune.sol';
 contract Lad {
     bool  public live;
     Vat   public  vat;
-    int   public Line;
+    int   public Line;  // rad
 
     constructor(address vat_) public { vat = Vat(vat_); live = true; }
 
@@ -15,7 +15,7 @@ contract Lad {
 
     struct Ilk {
         int256  spot;  // ray
-        int256  line;  // wad
+        int256  line;  // rad
     }
 
     mapping (bytes32 => Ilk) public ilks;
@@ -28,12 +28,10 @@ contract Lad {
         if (what == "line") ilks[ilk].line = risk;
     }
 
-    int256 constant ONE = 10 ** 27;
-    function rmul(int x, int y) internal pure returns (int z) {
+    function mul(int x, int y) internal pure returns (int z) {
         z = x * y;
         require(y >= 0 || x != -2**255);
         require(y == 0 || z / y == x);
-        z = z / ONE;
     }
 
     function frob(bytes32 ilk, int dink, int dart) public {
@@ -42,10 +40,10 @@ contract Lad {
 
         (int rate, int Art)           = vat.ilks(ilk);
         (int gem,  int ink,  int art) = vat.urns(ilk, msg.sender); gem;
-        bool calm = rmul(Art, rate) <= ilks[ilk].line && vat.Tab() < Line;
+        bool calm = mul(Art, rate) <= ilks[ilk].line && vat.Tab() < Line;
         bool cool = dart <= 0;
         bool firm = dink >= 0;
-        bool safe = rmul(ink, i.spot) >= rmul(art, rate);
+        bool safe = mul(ink, i.spot) >= mul(art, rate);
 
         require(( calm || cool ) && ( cool && firm || safe ) && live);
         require(rate != 0);

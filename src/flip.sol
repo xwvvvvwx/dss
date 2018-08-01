@@ -37,14 +37,14 @@ contract Flipper {
     uint256 public kicks;
 
     struct Bid {
-        uint256 bid;
+        uint256 bid;  // rad
         uint256 lot;
         address guy;  // high bidder
         uint48  tic;  // expiry time
         uint48  end;
         address lad;
         address gal;
-        uint256 tab;
+        uint256 tab;  // rad
     }
 
     mapping (uint => Bid) public bids;

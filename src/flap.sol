@@ -29,7 +29,7 @@ contract Flapper {
     uint256 public kicks;
 
     struct Bid {
-        uint256 bid;
+        uint256 bid;  // rad
         uint256 lot;
         address guy;  // high bidder
         uint48  tic;  // expiry time

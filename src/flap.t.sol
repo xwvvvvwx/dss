@@ -49,6 +49,10 @@ contract FlapTest is DSTest {
     Guy  bob;
     Gal  gal;
 
+    function rad(int wad) internal pure returns (int) {
+        return wad * 10 ** 27;
+    }
+
     function setUp() public {
         pie = new DSToken('pie');
         gem = new DSToken('gem');
@@ -75,7 +79,7 @@ contract FlapTest is DSTest {
         assertEq(pie.balanceOf(fuss),    0 ether);
         fuss.kick({ lot: 100 ether
                   , gal: gal
-                  , bid: 0
+                  , bid: rad(0)
                   });
         assertEq(pie.balanceOf(this),  900 ether);
         assertEq(pie.balanceOf(fuss),  100 ether);
@@ -83,18 +87,18 @@ contract FlapTest is DSTest {
     function test_tend() public {
         uint id = fuss.kick({ lot: 100 ether
                             , gal: gal
-                            , bid: 0
+                            , bid: rad(0)
                             });
         // lot taken from creator
         assertEq(pie.balanceOf(this), 900 ether);
 
-        ali.tend(id, 100 ether, 1 ether);
+        ali.tend(id, 100 ether, rad(1 ether));
         // bid taken from bidder
         assertEq(gem.balanceOf(ali), 199 ether);
         // gal receives payment
         assertEq(gem.balanceOf(gal),   1 ether);
 
-        bob.tend(id, 100 ether, 2 ether);
+        bob.tend(id, 100 ether, rad(2 ether));
         // bid taken from bidder
         assertEq(gem.balanceOf(bob), 198 ether);
         // prev bidder refunded
@@ -111,12 +115,12 @@ contract FlapTest is DSTest {
     function test_beg() public {
         uint id = fuss.kick({ lot: 100 ether
                             , gal: gal
-                            , bid: 0
+                            , bid: rad(0)
                             });
-        assertTrue( ali.try_tend(id, 100 ether, 1.00 ether));
-        assertTrue(!bob.try_tend(id, 100 ether, 1.01 ether));
+        assertTrue( ali.try_tend(id, 100 ether, rad(1.00 ether)));
+        assertTrue(!bob.try_tend(id, 100 ether, rad(1.01 ether)));
         // high bidder is subject to beg
-        assertTrue(!ali.try_tend(id, 100 ether, 1.01 ether));
-        assertTrue( bob.try_tend(id, 100 ether, 1.07 ether));
+        assertTrue(!ali.try_tend(id, 100 ether, rad(1.01 ether)));
+        assertTrue( bob.try_tend(id, 100 ether, rad(1.07 ether)));
     }
 }

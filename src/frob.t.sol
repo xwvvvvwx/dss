@@ -18,9 +18,9 @@ contract WarpVat is Vat {
     uint48 _era; function warp(uint48 era_) public { _era = era_; }
     function era() public view returns (uint48) { return _era; }
 
-    function mint(address guy, uint wad) public {
-        dai[guy] += int(wad);
-        Tab      += int(wad);
+    function mint(address guy, uint rad) public {
+        dai[guy] += int(rad);
+        Tab      += int(rad);
     }
 }
 
@@ -33,8 +33,8 @@ contract WarpVow is Vow {
     function joy() public view returns (uint) {
         return Joy();
     }
-    function stun(uint wad) public {
-        Woe += wad;
+    function stun(uint rad) public {
+        Woe += rad;
     }
 }
 
@@ -55,6 +55,10 @@ contract FrobTest is DSTest {
         return wad * 10 ** 9;
     }
 
+    function rad(int wad) internal pure returns (int) {
+        return wad * 10 ** 27;
+    }
+
     function setUp() public {
         vat = new WarpVat();
         lad = new Lad(vat);
@@ -69,8 +73,8 @@ contract FrobTest is DSTest {
         adapter.join(1000 ether);
 
         lad.file("gold", "spot", int(ray(1 ether)));
-        lad.file("gold", "line", 1000 ether);
-        lad.file("Line", 1000 ether);
+        lad.file("gold", "line", rad(1000 ether));
+        lad.file("Line", rad(1000 ether));
 
         gold.approve(vat);
     }
@@ -99,7 +103,7 @@ contract FrobTest is DSTest {
     function test_calm() public {
         // calm means that the debt ceiling is not exceeded
         // it's ok to increase debt as long as you remain calm
-        lad.file("gold", 'line', 10 ether);
+        lad.file("gold", 'line', rad(10 ether));
         assertTrue( try_frob("gold", 10 ether, 9 ether));
         // only if under debt ceiling
         assertTrue(!try_frob("gold",  0 ether, 2 ether));
@@ -107,9 +111,9 @@ contract FrobTest is DSTest {
     function test_cool() public {
         // cool means that the debt has decreased
         // it's ok to be over the debt ceiling as long as you're cool
-        lad.file("gold", 'line', 10 ether);
+        lad.file("gold", 'line', rad(10 ether));
         assertTrue(try_frob("gold", 10 ether,  8 ether));
-        lad.file("gold", 'line', 5 ether);
+        lad.file("gold", 'line', rad(5 ether));
         // can decrease debt when over ceiling
         assertTrue(try_frob("gold",  0 ether, -1 ether));
     }
@@ -201,8 +205,8 @@ contract BiteTest is DSTest {
         adapter.join(1000 ether);
 
         lad.file("gold", "spot", int(ray(1 ether)));
-        lad.file("gold", "line", 1000 ether);
-        lad.file("Line", 1000 ether);
+        lad.file("gold", "line", rad(1000 ether));
+        lad.file("Line", rad(1000 ether));
         flip = new Flipper(vat, "gold");
         cat.fuss("gold", flip);
         cat.file("gold", "chop", int(ray(1 ether)));
@@ -221,33 +225,33 @@ contract BiteTest is DSTest {
 
         assertEq(vat.Ink("gold", this),  40 ether);
         assertEq(vat.Art("gold", this), 100 ether);
-        assertEq(vow.woe(), 0 ether);
+        assertEq(vow.woe(), rad(0 ether));
         assertEq(adapter.balanceOf(this), 960 ether);
         uint id = cat.bite("gold", this);
         assertEq(vat.Ink("gold", this), 0);
         assertEq(vat.Art("gold", this), 0);
-        assertEq(vow.sin(vow.era()), 100 ether);
+        assertEq(vow.sin(vow.era()), rad(100 ether));
         assertEq(adapter.balanceOf(this), 960 ether);
 
-        cat.file("lump", uint(100 ether));
-        uint auction = cat.flip(id, 100 ether);  // flip all the tab
+        cat.file("lump", uint(rad(100 ether)));
+        uint auction = cat.flip(id, rad(100 ether));  // flip all the tab
 
-        assertEq(pie.balanceOf(vow),   0 ether);
-        flip.tend(auction, 40 ether,   1 ether);
-        assertEq(pie.balanceOf(vow),   1 ether);
-        flip.tend(auction, 40 ether, 100 ether);
-        assertEq(pie.balanceOf(vow), 100 ether);
+        assertEq(pie.balanceOf(vow),       0 ether);
+        flip.tend(auction, 40 ether,   rad(1 ether));
+        assertEq(pie.balanceOf(vow),       1 ether);
+        flip.tend(auction, 40 ether, rad(100 ether));
+        assertEq(pie.balanceOf(vow),     100 ether);
 
         assertEq(pie.balanceOf(this),       0 ether);
         assertEq(adapter.balanceOf(this), 960 ether);
-        vat.mint(this, 100 ether);  // magic up some pie for bidding
-        flip.dent(auction, 38 ether,  100 ether);
-        assertEq(pie.balanceOf(this), 100 ether);
-        assertEq(pie.balanceOf(vow),  100 ether);
+        vat.mint(this, rad(100 ether));  // magic up some pie for bidding
+        flip.dent(auction, 38 ether,  rad(100 ether));
+        assertEq(pie.balanceOf(this),     100 ether);
+        assertEq(pie.balanceOf(vow),      100 ether);
         assertEq(adapter.balanceOf(this), 962 ether);
         assertEq(vat.Gem("gold", this), 962 ether);
 
-        assertEq(vow.sin(vow.era()), 100 ether);
+        assertEq(vow.sin(vow.era()), rad(100 ether));
         assertEq(pie.balanceOf(vow), 100 ether);
     }
 
@@ -256,26 +260,26 @@ contract BiteTest is DSTest {
         lad.frob("gold",  40 ether, 100 ether);
         lad.file("gold", 'spot', int(ray(2 ether)));  // now unsafe
 
-        assertEq(vow.sin(vow.era()),   0 ether);
+        assertEq(vow.sin(vow.era()),   rad(0 ether));
         cat.bite("gold", this);
-        assertEq(vow.sin(vow.era()), 100 ether);
+        assertEq(vow.sin(vow.era()), rad(100 ether));
 
-        assertEq(vow.Sin(), 100 ether);
+        assertEq(vow.Sin(), rad(100 ether));
         vow.flog(vow.era());
-        assertEq(vow.Sin(),   0 ether);
-        assertEq(vow.woe(), 100 ether);
-        assertEq(vow.joy(),   0 ether);
-        assertEq(vow.Ash(),   0 ether);
+        assertEq(vow.Sin(),   rad(0 ether));
+        assertEq(vow.woe(), rad(100 ether));
+        assertEq(vow.joy(),   rad(0 ether));
+        assertEq(vow.Ash(),   rad(0 ether));
 
-        vow.file("lump", uint(10 ether));
+        vow.file("lump", uint(rad(10 ether)));
         uint f1 = vow.flop();
-        assertEq(vow.woe(),  90 ether);
-        assertEq(vow.joy(),   0 ether);
-        assertEq(vow.Ash(),  10 ether);
-        flop.dent(f1, 1000 ether, 10 ether);
-        assertEq(vow.woe(),  90 ether);
-        assertEq(vow.joy(),  10 ether);
-        assertEq(vow.Ash(),  10 ether);
+        assertEq(vow.woe(),  rad(90 ether));
+        assertEq(vow.joy(),   rad(0 ether));
+        assertEq(vow.Ash(),  rad(10 ether));
+        flop.dent(f1, 1000 ether, rad(10 ether));
+        assertEq(vow.woe(),  rad(90 ether));
+        assertEq(vow.joy(),  rad(10 ether));
+        assertEq(vow.Ash(),  rad(10 ether));
 
         assertEq(gov.balanceOf(this),  100 ether);
         flop.warp(4 hours);
@@ -285,17 +289,17 @@ contract BiteTest is DSTest {
 
     function test_flappy_bite() public {
         // get some surplus
-        vat.mint(vow, 100 ether);
+        vat.mint(vow, rad(100 ether));
         assertEq(pie.balanceOf(vow),  100 ether);
         assertEq(gov.balanceOf(this), 100 ether);
 
-        vow.file("lump", uint(100 ether));
-        assertEq(vow.Awe(), 0 ether);
+        vow.file("lump", uint(rad(100 ether)));
+        assertEq(vow.Awe(), rad(0 ether));
         uint id = vow.flap();
 
         assertEq(pie.balanceOf(this),   0 ether);
         assertEq(gov.balanceOf(this), 100 ether);
-        flap.tend(id, 100 ether, 10 ether);
+        flap.tend(id, 100 ether, rad(10 ether));
         flap.warp(4 hours);
         flap.deal(id);
         assertEq(pie.balanceOf(this),   100 ether);
