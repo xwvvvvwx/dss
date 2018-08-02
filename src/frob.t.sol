@@ -9,10 +9,6 @@ import './heal.sol';
 import {Dai20} from './transferFrom.sol';
 import {Adapter} from './join.sol';
 
-import {WarpFlip as Flipper} from './flip.t.sol';
-import {WarpFlop as Flopper} from './flop.t.sol';
-import {WarpFlap as Flapper} from './flap.t.sol';
-
 
 contract WarpVat is Vat {
     int256 constant ONE = 10 ** 27;
