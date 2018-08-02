@@ -80,7 +80,7 @@ contract FlipTest is DSTest {
     Gal  gal;
     Vat  vat;
 
-    function rad(int wad) internal pure returns (int) {
+    function rad(uint wad) internal pure returns (uint) {
         return wad * 10 ** 27;
     }
 

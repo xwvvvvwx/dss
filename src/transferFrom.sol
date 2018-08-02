@@ -12,7 +12,7 @@ contract Dai20 {
     VatLike public vat;
     constructor(address vat_) public  { vat = VatLike(vat_); }
 
-    int constant RAY = 10 ** 27;
+    uint constant RAY = 10 ** 27;
 
     function balanceOf(address guy) public view returns (uint) {
         return uint(vat.dai(guy)) / RAY;

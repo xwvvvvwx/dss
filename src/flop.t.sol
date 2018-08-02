@@ -49,7 +49,7 @@ contract FlopTest is DSTest {
     Guy  bob;
     Gal  gal;
 
-    function rad(int wad) internal pure returns (int) {
+    function rad(uint wad) internal pure returns (uint) {
         return wad * 10 ** 27;
     }
 

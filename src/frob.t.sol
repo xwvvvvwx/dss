@@ -178,6 +178,10 @@ contract BiteTest is DSTest {
         return wad * 10 ** 9;
     }
 
+    function rad(uint wad) internal pure returns (uint) {
+        return wad * 10 ** 27;
+    }
+
     function setUp() public {
         gov = new DSToken('GOV');
         gov.mint(100 ether);
@@ -205,8 +209,8 @@ contract BiteTest is DSTest {
         adapter.join(1000 ether);
 
         lad.file("gold", "spot", int(ray(1 ether)));
-        lad.file("gold", "line", rad(1000 ether));
-        lad.file("Line", rad(1000 ether));
+        lad.file("gold", "line", int(rad(1000 ether)));
+        lad.file("Line", int(rad(1000 ether)));
         flip = new Flipper(vat, "gold");
         cat.fuss("gold", flip);
         cat.file("gold", "chop", int(ray(1 ether)));
@@ -233,7 +237,7 @@ contract BiteTest is DSTest {
         assertEq(vow.sin(vow.era()), rad(100 ether));
         assertEq(adapter.balanceOf(this), 960 ether);
 
-        cat.file("lump", uint(rad(100 ether)));
+        cat.file("lump", rad(100 ether));
         uint auction = cat.flip(id, rad(100 ether));  // flip all the tab
 
         assertEq(pie.balanceOf(vow),       0 ether);
@@ -271,7 +275,7 @@ contract BiteTest is DSTest {
         assertEq(vow.joy(),   rad(0 ether));
         assertEq(vow.Ash(),   rad(0 ether));
 
-        vow.file("lump", uint(rad(10 ether)));
+        vow.file("lump", rad(10 ether));
         uint f1 = vow.flop();
         assertEq(vow.woe(),  rad(90 ether));
         assertEq(vow.joy(),   rad(0 ether));
@@ -293,7 +297,7 @@ contract BiteTest is DSTest {
         assertEq(pie.balanceOf(vow),  100 ether);
         assertEq(gov.balanceOf(this), 100 ether);
 
-        vow.file("lump", uint(rad(100 ether)));
+        vow.file("lump", rad(100 ether));
         assertEq(vow.Awe(), rad(0 ether));
         uint id = vow.flap();
 
