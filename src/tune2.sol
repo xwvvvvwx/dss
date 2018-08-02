@@ -62,7 +62,11 @@ contract Vat {
           }
           if eq(sig, 0x2424be5c /*   function urns(bytes32 , address ) external returns (int256 gem, int256 ink, int256 art); */)
 	  {
-	      // TODO urns returns struct
+	      let hash_0 := hash2(4, calldataload(4))
+	      mstore(64, sload(hash_0))
+	      mstore(96, sload(add(hash_0, 1)))
+	      mstore(128, sload(add(hash_0, 2)))	
+	      return(64, 96)
           }
           if eq(sig, 0x2d61a355 /*   function vice() external returns (int256); */) {
 	     mstore(64, sload(6))
@@ -115,7 +119,6 @@ contract Vat {
           if eq(sig, 0x815d245d /*   function file(bytes32 ilk, bytes32 what, int256 risk) external; */)
 	  {
 	    let hash_0 := hash2(3, calldataload(4))
-	    // TODO: string literals in assembly?
 	    // if what == "rate" set ilks[ilk].rate = risk
 	    if eq(calldataload(36), "rate") { sstore(hash_0, calldataload(68)) }
 
@@ -199,7 +202,10 @@ contract Vat {
       if lt(sig, 0xebf0c717/*   function root() external returns (address); */) {
         if eq(sig, 0xd9638d36 /*   function ilks(bytes32 ) external returns (int256 rate, int256 Art); */)
 	{
-	    // TODO ilks returns tuple
+	    let hash_0 := hash2(3, calldataload(4))
+	    mstore(64, sload(hash_0))
+	    mstore(96, sload(add(hash_0, 1)))
+	    return(64, 64)
         }
         if eq(sig, 0xdc42e309 /*   function Tab() external returns (int256); */) {
 	   mstore(64, sload(5))
