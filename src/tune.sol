@@ -61,10 +61,11 @@ contract Vat {
     }
 
     // --- Fungibility Engine ---
-    function move(address src, address dst, uint rad) public auth {
-        require(dai[src] >= int(rad));
-        dai[src] = sub(dai[src], int(rad));
-        dai[dst] = add(dai[dst], int(rad));
+    function move(address src, address dst, int rad) public auth {
+        dai[src] = sub(dai[src], rad);
+        dai[dst] = add(dai[dst], rad);
+	require(dai[src] >= 0);
+	require(dai[dst] >= 0);
     }
     function slip(bytes32 ilk, address guy, int256 wad) public auth {
         urns[ilk][guy].gem = add(urns[ilk][guy].gem, wad);
