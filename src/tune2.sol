@@ -15,11 +15,11 @@ interface VatI {
   function file(bytes32 ilk, bytes32 what, int256 risk) external;
   function tune(bytes32 ilk, address lad, int256 dink, int256 dart) external;
   function fold(bytes32 ilk, address vow, int256 rate) external;
-  function move(address src, address dst, uint256 wad) external;
+  function move(address src, address dst, int256 rad) external;
   function ilks(bytes32 ) external returns (int256 rate, int256 Art);
   function Tab() external returns (int256);
   function root() external returns (address);
-  function heal(address u, address v, int256 wad) external;
+  function heal(address u, address v, int256 rad) external;
   function sin(address ) external returns (int256);
 }
 
@@ -173,28 +173,29 @@ contract Vat {
 
 	    stop()
         }
-        if eq(sig, 0xbb35783b /*   function move(address src, address dst, uint256 rad) external; */) {
+        if eq(sig, 0xbb35783b /*   function move(address src, address dst, int256 rad) external; */) {
 
 	   let hash_0 := hash2(1, calldataload(4))
 
-	   // dai_src := dai[src]
-	   let dai_src := sload(hash_0)
+	   // dai_src := dai[src] - rad
+	   let dai_src := isub(sload(hash_0), calldataload(68))
 
-	   // uhh, nervous about the uint here...
-	   // TODO: need to add another check!
-	   // iff dai_src >= rad
-	   if slt(dai_src, calldataload(68)) { revert(0, 0) }
+	   // iff dai_src >= 0
+	   if slt(dai_src, 0) { revert(0, 0) }
 
-	   // set dai[src] = dai_src - rad
-	   sstore(hash_0, isub(dai_src, calldataload(68)))
+	   // set dai[src] = dai_src
+	   sstore(hash_0, dai_src)
 
 	   let hash_1 := hash2(1, calldataload(36))
 
-	   // dai_dst := dai[dst]
-	   let dai_dst := sload(hash_1)
+	   // dai_dst := dai[dst] + rad
+	   let dai_dst := iadd(sload(hash_1), calldataload(68))
+	   
+	   // iff dai_dst >= 0
+	   if slt(dai_dst, 0) { revert(0, 0) }
 
-	   // set dai[dst] = dai_dst + rad
-	   sstore(hash_1, iadd(dai_dst, calldataload(68)))
+	   // set dai[dst] = dai_dst
+	   sstore(hash_1, dai_dst)
 
 	   stop()
         }
