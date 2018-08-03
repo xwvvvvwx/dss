@@ -5,22 +5,22 @@ pragma solidity ^0.4.24;
 interface VatI {
   function grab(bytes32 ilk, address lad, address vow, int256 dink, int256 dart) external;
   function era() external returns (uint48);
-  function urns(bytes32 , address ) external returns (int256 gem, int256 ink, int256 art);
+  function urns(bytes32 ilk, address lad) external returns (int256 gem, int256 ink, int256 art);
   function vice() external returns (int256);
   function Gem(bytes32 ilk, address lad) external returns (int256);
   function Art(bytes32 ilk, address lad) external returns (int256);
-  function dai(address ) external returns (int256);
+  function dai(address lad) external returns (int256);
   function Ink(bytes32 ilk, address lad) external returns (int256);
   function slip(bytes32 ilk, address guy, int256 wad) external;
   function file(bytes32 ilk, bytes32 what, int256 risk) external;
   function tune(bytes32 ilk, address lad, int256 dink, int256 dart) external;
   function fold(bytes32 ilk, address vow, int256 rate) external;
   function move(address src, address dst, uint256 wad) external;
-  function ilks(bytes32 ) external returns (int256 rate, int256 Art);
+  function ilks(bytes32 ilk) external returns (int256 rate, int256 Art);
   function Tab() external returns (int256);
   function root() external returns (address);
   function heal(address u, address v, int256 wad) external;
-  function sin(address ) external returns (int256);
+  function sin(address lad) external returns (int256);
 }
 
 contract Vat {
@@ -31,14 +31,14 @@ contract Vat {
         if lt(sig, 0x3af39c21/*   function undefined() external; */) {
           if lt(sig, 0x2424be5c/*   function urns(bytes32 , address ) external returns (int256 gem, int256 ink, int256 art); */) {
             if eq(sig, 0x11045bee /*   function grab(bytes32 ilk, address lad, address vow, int256 dink, int256 dart) external; */)
-	    {		
+	    {
                 let hash_0 := hash3(4, calldataload(4), calldataload(36))
 
 		// set urns[ilk][lad].ink += dink
 		sstore(add(hash_0, 1), iadd(sload(add(hash_0, 1)), calldataload(100)))
 
 		// set urns[ilk][lad].art += dart
-		sstore(add(hash_0, 2), iadd(sload(add(hash_0, 2)), calldataload(132)))	
+		sstore(add(hash_0, 2), iadd(sload(add(hash_0, 2)), calldataload(132)))
 
 		let hash_1 := hash2(3, calldataload(4))
 
@@ -65,7 +65,7 @@ contract Vat {
 	      let hash_0 := hash2(4, calldataload(4))
 	      mstore(64, sload(hash_0))
 	      mstore(96, sload(add(hash_0, 1)))
-	      mstore(128, sload(add(hash_0, 2)))	
+	      mstore(128, sload(add(hash_0, 2)))
 	      return(64, 96)
           }
           if eq(sig, 0x2d61a355 /*   function vice() external returns (int256); */) {
@@ -87,7 +87,7 @@ contract Vat {
         }
         if eq(sig, 0x673c17da /*   function Art(bytes32 ilk, address lad) external returns (int256); */)
 	{
-	    // lol overflow risk??	
+	    // lol overflow risk??
 	    let hash_0 := add(hash3(4, calldataload(4), calldataload(36)), 2)
 	    mstore(64, sload(hash_0))
 	    return(64, 32)
@@ -110,7 +110,7 @@ contract Vat {
           if eq(sig, 0x7cdd3fde /*   function slip(bytes32 ilk, address guy, int256 wad) external; */)
 	  {
 	    let hash_0 := hash3(4, calldataload(4), calldataload(36))
-	    
+
 	    // set urns[ilk][guy].gem = urns[ilk][guy].gem + wad
 	    sstore(hash_0, iadd(sload(hash_0), calldataload(68)))
 
@@ -131,15 +131,15 @@ contract Vat {
 
 	    // set urns[ilk][lad].gem -= dink
 	    sstore(hash_0, isub(sload(hash_0), calldataload(68)))
-	    
+
 	    // set urns[ilk][lad].ink += dink
 	    sstore(add(hash_0, 1), iadd(sload(add(hash_0, 1)), calldataload(68)))
 
 	    // set urns[ilk][lad].art += dart
-	    sstore(add(hash_0, 2), iadd(sload(add(hash_0, 2)), calldataload(100)))	
+	    sstore(add(hash_0, 2), iadd(sload(add(hash_0, 2)), calldataload(100)))
 
 	    let hash_1 := hash2(3, calldataload(4))
-	    
+
 	    // set ilks[ilk].Art += dart
 	    sstore(add(hash_1, 1), iadd(sload(add(hash_1, 1)), calldataload(100)))
 
@@ -147,7 +147,7 @@ contract Vat {
 
 	    // set dai[lad] += i.rate * dart
 	    sstore(hash_2, iadd(sload(hash_2), imul(sload(hash_1), calldataload(100))))
-	    
+
 	    // set Tab += i.rate * dart
 	    sstore(5, iadd(sload(5), imul(sload(hash_1), calldataload(100))))
 
@@ -224,7 +224,7 @@ contract Vat {
 
 	 // iff sin_u >= rad
 	 if slt(sin_u, calldataload(68)) { revert(0, 0) }
-	 
+
 	 let hash_1 := hash2(1, calldataload(36))
 
 	 // dai_v := dai[v]
@@ -238,7 +238,7 @@ contract Vat {
 
 	 // iff _vice >= rad
 	 if slt(_vice, calldataload(68)) { revert(0, 0) }
-	 
+
 	 // _Tab := Tab
 	 let _Tab := sload(5)
 
@@ -254,7 +254,7 @@ contract Vat {
 	 // set vice = _vice - rad
 	 sstore(6, isub(_vice, calldataload(68)))
 
-	 // set Tab = _Tab - rad 
+	 // set Tab = _Tab - rad
 	 sstore(5, isub(_Tab, calldataload(68)))
 
 	 stop()
