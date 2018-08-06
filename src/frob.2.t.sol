@@ -4,14 +4,13 @@ import "ds-test/test.sol";
 import "ds-token/token.sol";
 
 import {Lad} from './frob.sol';
-import {Vat} from './tune.2.sol';
-import {Vat as VatI} from './tune.sol';
+import {Vat, VatI} from './tune.2.sol';
 import {Dai20} from './transferFrom.sol';
 import {Adapter} from './join.sol';
 
 
 contract Frob2Test is DSTest {
-    VatI vat;
+    VatI    vat;
     Lad     lad;
     Dai20   pie;
     DSToken gold;
