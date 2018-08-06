@@ -26,10 +26,6 @@ contract Frob2Test is DSTest {
         return wad * 10 ** 9;
     }
 
-    function rad(int wad) internal pure returns (int) {
-        return wad * 10 ** 27;
-    }
-
     function setUp() public {
         vat = VatI(new Vat());
         lad = new Lad(vat);
@@ -44,8 +40,8 @@ contract Frob2Test is DSTest {
         adapter.join(1000 ether);
 
         lad.file("gold", "spot", int(ray(1 ether)));
-        lad.file("gold", "line", rad(1000 ether));
-        lad.file("Line", rad(1000 ether));
+        lad.file("gold", "line", 1000 ether);
+        lad.file("Line", 1000 ether);
 
         gold.approve(vat);
     }
@@ -77,7 +73,7 @@ contract Frob2Test is DSTest {
     function test_calm() public {
         // calm means that the debt ceiling is not exceeded
         // it's ok to increase debt as long as you remain calm
-        lad.file("gold", 'line', rad(10 ether));
+        lad.file("gold", 'line', 10 ether);
         assertTrue( try_frob("gold", 10 ether, 9 ether));
         // only if under debt ceiling
         assertTrue(!try_frob("gold",  0 ether, 2 ether));
@@ -85,9 +81,9 @@ contract Frob2Test is DSTest {
     function test_cool() public {
         // cool means that the debt has decreased
         // it's ok to be over the debt ceiling as long as you're cool
-        lad.file("gold", 'line', rad(10 ether));
+        lad.file("gold", 'line', 10 ether);
         assertTrue(try_frob("gold", 10 ether,  8 ether));
-        lad.file("gold", 'line', rad(5 ether));
+        lad.file("gold", 'line', 5 ether);
         // can decrease debt when over ceiling
         assertTrue(try_frob("gold",  0 ether, -1 ether));
     }
