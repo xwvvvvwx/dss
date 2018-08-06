@@ -3,7 +3,7 @@ pragma solidity ^0.4.24;
 import "ds-test/test.sol";
 import "ds-token/token.sol";
 
-import {Lad} from './frob.sol';
+import {Lad, LadI} from './frob.2.sol';
 import {Vat, VatI} from './tune.2.sol';
 import {Dai20} from './transferFrom.sol';
 import {Adapter} from './join.sol';
@@ -11,7 +11,7 @@ import {Adapter} from './join.sol';
 
 contract Frob2Test is DSTest {
     VatI    vat;
-    Lad     lad;
+    LadI    lad;
     Dai20   pie;
     DSToken gold;
 
@@ -28,7 +28,7 @@ contract Frob2Test is DSTest {
 
     function setUp() public {
         vat = VatI(new Vat());
-        lad = new Lad(vat);
+        lad = LadI(new Lad(vat));
         pie = new Dai20(vat);
 
         gold = new DSToken("GEM");
