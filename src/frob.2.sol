@@ -32,9 +32,7 @@ contract Lad {
           return(64, 32) 
         }
         if eq(sig, 0x5a984ded /*   function frob(bytes32 ilk, int256 dink, int256 dart) external; */) {
-          // TODO g, v
-          let g := 1000000
-          let v := gasprice
+
           // put bytes4(keccak256("tune(bytes32,address,int256,int256)")) << 28 bytes
           mstore(0, 0xa4593c5200000000000000000000000000000000000000000000000000000000)
           // put ilk
@@ -46,14 +44,14 @@ contract Lad {
           // put dart
           mstore(100, calldataload(68))
           // iff vat.tune(ilk, msg.sender, dink, dart) != 0
-          if iszero(call(g, sload(0), v, 0, 132, 0, 0)) { revert(0, 0) }
+          if iszero(call(gas, sload(0), 0, 0, 132, 0, 0)) { revert(0, 0) }
 
           // put bytes4(keccak256("ilks(bytes32)")) << 28 bytes
           mstore(0, 0xd9638d3600000000000000000000000000000000000000000000000000000000)
           // put ilk
           mstore(4, calldataload(4))
           // iff vat.ilks(ilk) != 0
-          if iszero(call(g, sload(0), v, 0, 36, 0, 64)) { revert(0, 0) }
+          if iszero(call(gas, sload(0), 0, 0, 36, 0, 64)) { revert(0, 0) }
 
           // rate, Art := vat.ilks(ilk)
           let rate := mload(0)
@@ -66,7 +64,7 @@ contract Lad {
           // put msg.sender
           mstore(36, caller)
           // iff vat.urns(ilk, msg.sender) != 0
-          if iszero(call(g, sload(0), v, 0, 68, 0, 96)) { revert(0, 0) }
+          if iszero(call(gas, sload(0), 0, 0, 68, 0, 96)) { revert(0, 0) }
 
           // _, ink, art := vat.urns(ilk, msg.sender)
           let ink := mload(32)
@@ -75,7 +73,7 @@ contract Lad {
           // put bytes4(keccak256("Tab()")) << 28 bytes
           mstore(0, 0xdc42e30900000000000000000000000000000000000000000000000000000000)
           // iff vat.Tab() != 0
-          if iszero(call(g, sload(0), v, 0, 4, 0, 32)) { revert(0, 0) }
+          if iszero(call(gas, sload(0), 0, 0, 4, 0, 32)) { revert(0, 0) }
 
           // Tab := vat.Tab()
           let Tab := mload(0)

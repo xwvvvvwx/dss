@@ -30,9 +30,6 @@ contract Adapter {
       let sig := div(calldataload(0), 0x100000000000000000000000000000000000000000000000000000000)
       if lt(sig, 0x7bd2bea7/*   function gem() external returns (address); */) {
 	if eq(sig, 0x049878f3 /*   function join(uint256 wad) external; */) {
-          // TODO g, v
-          let g := 1000000
-          let v := gasprice
           
           // iff int(wad) >= 0
           if slt(calldataload(4), 0) { revert(0, 0) }
@@ -46,7 +43,7 @@ contract Adapter {
           // put wad
           mstore(68, calldataload(4))
           // iff gem.move(msg.sender, this, wad) != 0
-          if iszero(call(g, sload(2), v, 0, 100, 0, 0)) { revert(0, 0) }
+          if iszero(call(gas, sload(2), 0, 0, 100, 0, 0)) { revert(0, 0) }
           
           // put bytes4(keccak256("slip(bytes32,address,int256)")) << 28 bytes
           mstore(0, 0x7cdd3fde00000000000000000000000000000000000000000000000000000000)
@@ -57,7 +54,7 @@ contract Adapter {
           // put wad
           mstore(68, calldataload(4))
           // iff vat.slip(ilk, msg.sender, wad) != 0
-          if iszero(call(g, sload(0), v, 0, 100, 0, 0)) { revert(0, 0) }
+          if iszero(call(gas, sload(0), 0, 0, 100, 0, 0)) { revert(0, 0) }
           
           stop()
         }
@@ -71,9 +68,6 @@ contract Adapter {
         return(64, 32)
       }
       if eq(sig, 0x7f8661a1 /*   function exit(uint256 wad) external; */) {
-        // TODO g, v
-        let g := 1000000
-        let v := gasprice
         
         // iff int(wad) >= 0
         if slt(calldataload(4), 0) { revert(0, 0) }
@@ -87,7 +81,7 @@ contract Adapter {
         // put wad
         mstore(68, calldataload(4))
         // iff gem.move(this, msg.sender, wad) != 0
-        if iszero(call(g, sload(2), v, 0, 100, 0, 0)) { revert(0, 0) }
+        if iszero(call(gas, sload(2), 0, 0, 100, 0, 0)) { revert(0, 0) }
 
         // put bytes4(keccak256("slip(bytes32,address,int256)")) << 28 bytes
         mstore(0, 0x7cdd3fde00000000000000000000000000000000000000000000000000000000)
@@ -98,7 +92,7 @@ contract Adapter {
         // put -wad
         mstore(68, sub(0, calldataload(4)))
         // iff vat.slip(ilk, msg.sender, -wad) != 0
-        if iszero(call(g, sload(0), v, 0, 100, 0, 0)) { revert(0, 0) }
+        if iszero(call(gas, sload(0), 0, 0, 100, 0, 0)) { revert(0, 0) }
       
         stop()
       }
