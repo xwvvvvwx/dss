@@ -6,16 +6,16 @@ import "ds-token/token.sol";
 import {Lad, LadI} from './frob.2.sol';
 import {Vat, VatI} from './tune.2.sol';
 import {Dai20} from './transferFrom.sol';
-import {Adapter} from './join.sol';
+import {Adapter, AdapterI} from './join.2.sol';
 
 
 contract Frob2Test is DSTest {
-    VatI    vat;
-    LadI    lad;
-    Dai20   pie;
+    VatI     vat;
+    LadI     lad;
+    Dai20    pie;
     DSToken gold;
 
-    Adapter adapter;
+    AdapterI adapter;
 
     function try_frob(bytes32 ilk, int ink, int art) public returns(bool) {
         bytes4 sig = bytes4(keccak256("frob(bytes32,int256,int256)"));
@@ -35,7 +35,7 @@ contract Frob2Test is DSTest {
         gold.mint(1000 ether);
 
         vat.file("gold", "rate", int(ray(1 ether)));
-        adapter = new Adapter(vat, "gold", gold);
+        adapter = AdapterI(new Adapter(vat, "gold", gold));
         gold.approve(adapter);
         adapter.join(1000 ether);
 
