@@ -43,14 +43,14 @@ contract Lad {
           mstore(68, calldataload(36))
           // put dart
           mstore(100, calldataload(68))
-          // iff vat.tune(ilk, msg.sender, dink, dart) != 0
+          // iff vat.call("tune(bytes32,address,int256,int256)", ilk, msg.sender, dink, dart) != 0
           if iszero(call(gas, sload(0), 0, 0, 132, 0, 0)) { revert(0, 0) }
 
           // put bytes4(keccak256("ilks(bytes32)")) << 28 bytes
           mstore(0, 0xd9638d3600000000000000000000000000000000000000000000000000000000)
           // put ilk
           mstore(4, calldataload(4))
-          // iff vat.ilks(ilk) != 0
+          // iff vat.call("ilks(bytes32)", ilk) != 0
           if iszero(call(gas, sload(0), 0, 0, 36, 0, 64)) { revert(0, 0) }
 
           // rate, Art := vat.ilks(ilk)
@@ -63,7 +63,7 @@ contract Lad {
           mstore(4, calldataload(4))
           // put msg.sender
           mstore(36, caller)
-          // iff vat.urns(ilk, msg.sender) != 0
+          // iff vat.call("urns(bytes32,address)", ilk, msg.sender) != 0
           if iszero(call(gas, sload(0), 0, 0, 68, 0, 96)) { revert(0, 0) }
 
           // _, ink, art := vat.urns(ilk, msg.sender)
@@ -72,7 +72,7 @@ contract Lad {
 
           // put bytes4(keccak256("Tab()")) << 28 bytes
           mstore(0, 0xdc42e30900000000000000000000000000000000000000000000000000000000)
-          // iff vat.Tab() != 0
+          // iff vat.call("Tab()") != 0
           if iszero(call(gas, sload(0), 0, 0, 4, 0, 32)) { revert(0, 0) }
 
           // Tab := vat.Tab()

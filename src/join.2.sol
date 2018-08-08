@@ -42,7 +42,7 @@ contract Adapter {
           mstore(36, address)
           // put wad
           mstore(68, calldataload(4))
-          // iff gem.move(msg.sender, this, wad) != 0
+          // iff gem.call("move(address,address,uint256)", msg.sender, this, wad) != 0
           if iszero(call(gas, sload(2), 0, 0, 100, 0, 0)) { revert(0, 0) }
           
           // put bytes4(keccak256("slip(bytes32,address,int256)")) << 28 bytes
@@ -53,7 +53,7 @@ contract Adapter {
           mstore(36, caller)
           // put wad
           mstore(68, calldataload(4))
-          // iff vat.slip(ilk, msg.sender, wad) != 0
+          // iff vat.call("slip(bytes32,address,int256)", ilk, msg.sender, wad) != 0
           if iszero(call(gas, sload(0), 0, 0, 100, 0, 0)) { revert(0, 0) }
           
           stop()
@@ -80,7 +80,7 @@ contract Adapter {
         mstore(36, caller)
         // put wad
         mstore(68, calldataload(4))
-        // iff gem.move(this, msg.sender, wad) != 0
+        // iff gem.call("move(address,address,uint256)", this, msg.sender, wad) != 0
         if iszero(call(gas, sload(2), 0, 0, 100, 0, 0)) { revert(0, 0) }
 
         // put bytes4(keccak256("slip(bytes32,address,int256)")) << 28 bytes
@@ -91,7 +91,7 @@ contract Adapter {
         mstore(36, caller)
         // put -wad
         mstore(68, sub(0, calldataload(4)))
-        // iff vat.slip(ilk, msg.sender, -wad) != 0
+        // iff vat.call("slip(bytes32,address,int256)", ilk, msg.sender, -wad) != 0
         if iszero(call(gas, sload(0), 0, 0, 100, 0, 0)) { revert(0, 0) }
       
         stop()
