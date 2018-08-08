@@ -48,10 +48,10 @@ contract Vat {
             let hash_2 := hash2(2, calldataload(68))
             
             // set sin[vow] -= i.rate * dart
-            sstore(hash_2, iadd(sload(hash_2), imul(sload(hash_1), calldataload(132))))
+            sstore(hash_2, isub(sload(hash_2), imul(sload(hash_1), calldataload(132))))
             
             // set vice -= i.rate * dart
-            sstore(6, iadd(sload(6), imul(sload(hash_1), calldataload(132))))
+            sstore(6, isub(sload(6), imul(sload(hash_1), calldataload(132))))
 
             stop()            
           }
@@ -217,58 +217,58 @@ contract Vat {
           mstore(64, sload(0))
           return(64, 32)         
         }
-        if eq(sig, 0xee8cd748 /*   function heal(address u, address v, int256 wad) external; */) {
-          let hash_0 := hash2(2, calldataload(4))
+      }
+      if eq(sig, 0xee8cd748 /*   function heal(address u, address v, int256 wad) external; */) {
+        let hash_0 := hash2(2, calldataload(4))
 
-          // rad := wad * 10**27
-          let rad := imul(calldataload(68), 1000000000000000000000000000)
+        // rad := wad * 10**27
+        let rad := imul(calldataload(68), 1000000000000000000000000000)
 
-          // sin_u := sin[u]
-          let sin_u := sload(hash_0)
+        // sin_u := sin[u]
+        let sin_u := sload(hash_0)
 
-          // iff sin_u >= rad
-          if slt(sin_u, rad) { revert(0, 0) }
+        // iff sin_u >= rad
+        if slt(sin_u, rad) { revert(0, 0) }
 
-          let hash_1 := hash2(1, calldataload(36))
+        let hash_1 := hash2(1, calldataload(36))
 
-          // dai_v := dai[v]
-          let dai_v := sload(hash_1)
+        // dai_v := dai[v]
+        let dai_v := sload(hash_1)
 
-          // iff dai_v >= rad
-          if slt(dai_v, rad) { revert(0, 0) }
+        // iff dai_v >= rad
+        if slt(dai_v, rad) { revert(0, 0) }
 
-          // _vice := vice
-          let _vice := sload(6)
+        // _vice := vice
+        let _vice := sload(6)
 
-          // iff _vice >= rad
-          if slt(_vice, rad) { revert(0, 0) }
+        // iff _vice >= rad
+        if slt(_vice, rad) { revert(0, 0) }
 
-          // _Tab := Tab
-          let _Tab := sload(5)
+        // _Tab := Tab
+        let _Tab := sload(5)
 
-          // iff _Tab >= rad
-          if slt(_Tab, rad) { revert(0, 0) }
+        // iff _Tab >= rad
+        if slt(_Tab, rad) { revert(0, 0) }
 
-          // set sin[u] = sin_u - rad
-          sstore(hash_0, isub(sin_u, rad))
+        // set sin[u] = sin_u - rad
+        sstore(hash_0, isub(sin_u, rad))
 
-          // set dai[v] = sin_u - rad
-          sstore(hash_1, isub(dai_v, rad))
+        // set dai[v] = sin_u - rad
+        sstore(hash_1, isub(dai_v, rad))
 
-          // set vice = _vice - rad
-          sstore(6, isub(_vice, rad))
+        // set vice = _vice - rad
+        sstore(6, isub(_vice, rad))
 
-          // set Tab = _Tab - rad
-          sstore(5, isub(_Tab, rad))
+        // set Tab = _Tab - rad
+        sstore(5, isub(_Tab, rad))
 
-          stop()
+        stop()
 
-        }
-        if eq(sig, 0xf059212a /*   function sin(address lad) external returns (int256); */) {
-          let hash_0 := hash2(2, calldataload(4))
-          mstore(64, sload(hash_0))
-          return(64, 32)
-        }
+      }
+      if eq(sig, 0xf059212a /*   function sin(address lad) external returns (int256); */) {
+        let hash_0 := hash2(2, calldataload(4))
+        mstore(64, sload(hash_0))
+        return(64, 32)
       }
       
       // failed to select any of the public methods:
