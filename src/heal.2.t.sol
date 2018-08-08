@@ -5,7 +5,7 @@ import "ds-test/test.sol";
 import {WarpFlop as Flop} from './flop.t.sol';
 import {WarpFlap as Flap} from './flap.t.sol';
 import {WarpVat  as Vat, WarpVatI as VatI}  from './frob.2.t.sol';
-import {WarpVow  as Vow}  from './frob.2.t.sol';
+import {WarpVow  as Vow, WarpVowI as VowI}  from './frob.2.t.sol';
 
 contract Gem {
     mapping (address => uint256) public balanceOf;
@@ -16,14 +16,14 @@ contract Gem {
 
 contract VowTest is DSTest {
     VatI  vat;
-    Vow   vow;
+    VowI  vow;
     Flop flop;
     Flap flap;
     Gem   gov;
 
     function setUp() public {
         vat = VatI(new Vat());
-        vow = new Vow(vat);
+        vow = VowI(new Vow(vat));
 
         gov = new Gem();
 

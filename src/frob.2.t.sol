@@ -6,7 +6,7 @@ import "ds-token/token.sol";
 import {Lad, LadI} from './frob.2.sol';
 import {Vat, VatI} from './tune.2.sol';
 import './bite.sol';
-import './heal.sol';
+import {Vow, VowI} from './heal.2.sol';
 import {Dai20} from './transferFrom.sol';
 import {Adapter, AdapterI} from './join.2.sol';
 
@@ -19,6 +19,12 @@ import {WarpFlap as Flapper} from './flap.t.sol';
 contract WarpVatI is VatI {
   function era() external returns (uint48 _era);
   function mint(address guy, uint256 wad) external;
+}
+
+contract WarpVowI is VowI {
+  function woe() external returns (uint256 wad);
+  function joy() external returns (uint256 wad);
+  function stun(uint256 wad) external;
 }
 
 contract WarpVat is Vat {
@@ -44,18 +50,39 @@ contract WarpVat is Vat {
     }
 }
 
-
 contract WarpVow is Vow {
     constructor(address vat_) Vow(vat_) public { }
 
-    function woe() public view returns (uint) {
-        return Woe;
+    function woe() public view returns (uint wad) {
+        assembly {
+          wad := sload(5)
+        }
     }
-    function joy() public view returns (uint) {
-        return Joy();
+    function joy() public view returns (uint wad) {
+        assembly {
+          function Joy() -> wad {
+            // put bytes4(keccak256("dai(address)")) << 28 bytes
+            mstore(0, 0x6c25b34600000000000000000000000000000000000000000000000000000000)
+            // put this
+            mstore(4, address)
+            // iff vat.call("dai(address)", this) != 0
+            if iszero(call(gas, sload(0), 0, 0, 36, 0, 32)) { revert(0, 0) }
+
+            let vat_dai := mload(0)
+
+            // iff vat.dai(this) >= 0
+            if slt(vat_dai, 0) { revert(0, 0) }
+
+            wad := div(vat_dai, 1000000000000000000000000000)
+          }
+          
+          wad := Joy()
+        }
     }
     function stun(uint wad) public {
-        Woe += wad;
+        assembly {
+          sstore(5, add(sload(5), calldataload(4)))
+        }
     }
 }
 
@@ -176,7 +203,7 @@ contract Frob2Test is DSTest {
 contract BiteTest is DSTest {
     WarpVatI vat;
     LadI     lad;
-    WarpVow  vow;
+    WarpVowI vow;
     Cat      cat;
     Dai20    pie;
     DSToken gold;
@@ -223,7 +250,7 @@ contract BiteTest is DSTest {
         flop = new Flopper(vat, gov);
         gov.setOwner(flop);
 
-        vow = new WarpVow(vat);
+        vow = WarpVowI(new WarpVow(vat));
         vow.file("flap", address(flap));
         vow.file("flop", address(flop));
 
