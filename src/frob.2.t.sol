@@ -5,7 +5,7 @@ import "ds-token/token.sol";
 
 import {Lad, LadI} from './frob.2.sol';
 import {Vat, VatI} from './tune.2.sol';
-import './bite.sol';
+import {Cat, CatI} from './bite.2.sol';
 import {Vow, VowI} from './heal.2.sol';
 import {Dai20} from './transferFrom.sol';
 import {Adapter, AdapterI} from './join.2.sol';
@@ -167,7 +167,7 @@ contract BiteTest is DSTest {
     WarpVatI vat;
     LadI     lad;
     VowI     vow;
-    Cat      cat;
+    CatI     cat;
     Dai20    pie;
     DSToken gold;
 
@@ -218,7 +218,7 @@ contract BiteTest is DSTest {
         vow.file("flap", address(flap));
         vow.file("flop", address(flop));
 
-        cat = new Cat(vat, lad, vow);
+        cat = CatI(new Cat(vat, lad, vow));
 
         gold = new DSToken("GEM");
         gold.mint(1000 ether);
