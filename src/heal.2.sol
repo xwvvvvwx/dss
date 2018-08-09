@@ -19,17 +19,12 @@ interface VowI {
   function pad() external returns (uint256);
   function flop() external returns (uint256);
   function Sin() external returns (uint256);
-  function file(bytes32 what, address fuss) external;
+  function file(bytes32 what, address addr) external;
   function heal(uint256 wad) external;
 }
 
 contract Vow {
-  constructor (address vat_) public {
-    assembly {
-      // set vat = vat_
-      codecopy(0, sub(codesize, 32), 32)
-      sstore(0, mload(0))
-    }
+  constructor () public {
   }
 
   function () public {
@@ -206,13 +201,16 @@ contract Vow {
         mstore(64, sload(4))
         return(64, 32)
       }
-      if eq(sig, 0xd4e8be83 /*   function file(bytes32 what, address fuss) external; */) {
-        // if what == "flap" set cow = fuss
+      if eq(sig, 0xd4e8be83 /*   function file(bytes32 what, address addr) external; */) {
+        // if what == "flap" set cow = addr
         if eq(calldataload(4), "flap") { sstore(1, calldataload(36)) }
 
-        // if what == "flop" set row = fuss
+        // if what == "flop" set row = addr
         if eq(calldataload(4), "flop") { sstore(2, calldataload(36)) }
 
+        // if what == "vat" set vat = addr
+        if eq(calldataload(4), "vat") { sstore(0, calldataload(36)) }
+        
         stop()
       }
       if eq(sig, 0xf37ac61c /*   function heal(uint256 wad) external; */) {

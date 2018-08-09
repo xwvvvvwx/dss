@@ -23,13 +23,14 @@ contract VowTest is DSTest {
 
     function setUp() public {
         vat = VatI(new Vat());
-        vow = VowI(new Vow(vat));
+        vow = VowI(new Vow());
 
         gov = new Gem();
 
         flop = new Flop(vat, gov);
         flap = new Flap(vat, gov);
 
+        vow.file("vat", address(vat));
         vow.file("flop", address(flop));
         vow.file("flap", address(flap));
         vow.file("lump", uint256(100 ether));
