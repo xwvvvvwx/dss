@@ -22,9 +22,6 @@ contract WarpVatI is VatI {
 }
 
 contract WarpVowI is VowI {
-  function woe() external returns (uint256 wad);
-  function joy() external returns (uint256 wad);
-  function stun(uint256 wad) external;
 }
 
 contract WarpVat is Vat {
@@ -50,41 +47,7 @@ contract WarpVat is Vat {
     }
 }
 
-contract WarpVow is Vow {
-    constructor(address vat_) Vow(vat_) public { }
-
-    function woe() public view returns (uint wad) {
-        assembly {
-          wad := sload(5)
-        }
-    }
-    function joy() public view returns (uint wad) {
-        assembly {
-          function Joy() -> wad {
-            // put bytes4(keccak256("dai(address)")) << 28 bytes
-            mstore(0, 0x6c25b34600000000000000000000000000000000000000000000000000000000)
-            // put this
-            mstore(4, address)
-            // iff vat.call("dai(address)", this) != 0
-            if iszero(call(gas, sload(0), 0, 0, 36, 0, 32)) { revert(0, 0) }
-
-            let vat_dai := mload(0)
-
-            // iff vat.dai(this) >= 0
-            if slt(vat_dai, 0) { revert(0, 0) }
-
-            wad := div(vat_dai, 1000000000000000000000000000)
-          }
-          
-          wad := Joy()
-        }
-    }
-    function stun(uint wad) public {
-        assembly {
-          sstore(5, add(sload(5), calldataload(4)))
-        }
-    }
-}
+contract WarpVow is Vow {}
 
 contract Frob2Test is DSTest {
     VatI     vat;
@@ -203,7 +166,7 @@ contract Frob2Test is DSTest {
 contract BiteTest is DSTest {
     WarpVatI vat;
     LadI     lad;
-    WarpVowI vow;
+    VowI     vow;
     Cat      cat;
     Dai20    pie;
     DSToken gold;
@@ -250,7 +213,8 @@ contract BiteTest is DSTest {
         flop = new Flopper(vat, gov);
         gov.setOwner(flop);
 
-        vow = WarpVowI(new WarpVow(vat));
+        vow = VowI(new Vow());
+        vow.file("vat", address(vat));
         vow.file("flap", address(flap));
         vow.file("flop", address(flop));
 
@@ -285,7 +249,7 @@ contract BiteTest is DSTest {
 
         assertEq(ink("gold", this),  40 ether);
         assertEq(art("gold", this), 100 ether);
-        assertEq(vow.woe(), 0 ether);
+        assertEq(vow.Woe(), 0 ether);
         assertEq(gem("gold", this), 960 ether);
         uint id = cat.bite("gold", this);
         assertEq(ink("gold", this), 0);
@@ -327,18 +291,18 @@ contract BiteTest is DSTest {
         assertEq(vow.Sin(), 100 ether);
         vow.flog(vow.era());
         assertEq(vow.Sin(),   0 ether);
-        assertEq(vow.woe(), 100 ether);
-        assertEq(vow.joy(),   0 ether);
+        assertEq(vow.Woe(), 100 ether);
+        assertEq(vow.Joy(),   0 ether);
         assertEq(vow.Ash(),   0 ether);
 
         vow.file("lump", uint(10 ether));
         uint f1 = vow.flop();
-        assertEq(vow.woe(),  90 ether);
-        assertEq(vow.joy(),   0 ether);
+        assertEq(vow.Woe(),  90 ether);
+        assertEq(vow.Joy(),   0 ether);
         assertEq(vow.Ash(),  10 ether);
         flop.dent(f1, 1000 ether, 10 ether);
-        assertEq(vow.woe(),  90 ether);
-        assertEq(vow.joy(),  10 ether);
+        assertEq(vow.Woe(),  90 ether);
+        assertEq(vow.Joy(),  10 ether);
         assertEq(vow.Ash(),  10 ether);
 
         assertEq(gov.balanceOf(this),  100 ether);
