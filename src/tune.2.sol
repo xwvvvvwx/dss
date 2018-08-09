@@ -105,9 +105,15 @@ contract Vat {
         if eq(sig, 0x7cdd3fde /*   function slip(bytes32 ilk, address guy, int256 wad) external; */) {
           let hash_0 := hash3(4, calldataload(4), calldataload(36))
 
-          // set urns[ilk][guy].gem = urns[ilk][guy].gem + wad
-          sstore(hash_0, iadd(sload(hash_0), calldataload(68)))
+          // gem := urns[ilk][guy].gem + wad
+          let gem := iadd(sload(hash_0), calldataload(68))
 
+          // iff urns[ilk][guy].gem >= 0
+          if slt(gem, 0) { revert(0, 0) }
+          
+          // set urns[ilk][guy].gem = urns[ilk][guy].gem + wad
+          sstore(hash_0, gem)
+          
           stop()
         }
         if eq(sig, 0x815d245d /*   function file(bytes32 ilk, bytes32 what, int256 risk) external; */) {
