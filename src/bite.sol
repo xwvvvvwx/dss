@@ -66,6 +66,18 @@ contract Cat {
         vow = vow_;
     }
 
+    function mul(uint x, uint y) internal pure returns (uint z) {
+        z = x * y;
+        require(y == 0 || z / y == x);
+    }
+
+    int constant RAY = 10 ** 27;
+    function rmul(int x, int y) internal pure returns (int z) {
+        z = x * y;
+        require(y == 0 || z / y == x);
+        z = z / RAY;
+    }
+
     function file(bytes32 what, uint risk) public auth {
         if (what == "lump") lump = risk;
     }
@@ -96,11 +108,11 @@ contract Cat {
         Flip storage f = flips[n];
         Ilk  storage i = ilks[f.ilk];
 
-        require(wad <= f.tab);
+        require(int(wad) >= 0 && wad <= f.tab);
         require(wad == lump || (wad < lump && wad == f.tab));
 
         uint tab = f.tab;
-        uint ink = f.ink * wad / tab;
+        uint ink = mul(f.ink, wad) / tab;
 
         f.tab -= wad;
         f.ink -= ink;
@@ -111,10 +123,5 @@ contract Cat {
                                    , lot: uint(ink)
                                    , bid: uint(0)
                                    });
-    }
-
-    int constant RAY = 10 ** 27;
-    function rmul(int x, int y) internal pure returns (int z) {
-        z = x * y / RAY;
     }
 }
