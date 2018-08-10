@@ -208,8 +208,8 @@ contract Cat {
         // tab = flips[n].tab
         let tab := sload(add(hash_0, 3))
 
-        // iff wad <= tab
-        if gt(calldataload(36), tab) { revert(0, 0) }
+        // iff int(wad) >= 0 && wad <= tab
+        if or(slt(calldataload(36), 0), gt(calldataload(36), tab)) { revert(0, 0) }
 
         // lump := lump
         let lump := sload(3)
@@ -221,7 +221,7 @@ contract Cat {
         let ink_ := sload(add(hash_0, 2))
 
         // ink := ink_ * wad / tab
-        let ink := div(mul(ink_, calldataload(36)), tab)
+        let ink := div(uimul(ink_, calldataload(36)), tab)
 
         // set f.tab -= wad
         sstore(add(hash_0, 3), sub(tab, calldataload(36)))
@@ -256,8 +256,14 @@ contract Cat {
         z := add(x, y)
         if lt(z, x) { revert(0, 0) }
       }
+      function uimul(x, y) -> z {
+        z := mul(x, y)
+        if iszero(or(eq(y, 0), eq(div(z, y), x))) { revert(0, 0) }
+      }
       function rmul(x, y) -> z {
-        z := div(mul(x, y), 1000000000000000000000000000)
+        z := mul(x, y)
+        if iszero(or(eq(y, 0), eq(div(z, y), x))) { revert(0, 0) }
+        z := div(z, 1000000000000000000000000000)
       }
     }
   }
