@@ -27,9 +27,9 @@ interface CatI {
   function vat() external returns (address);
   function bite(bytes32 ilk, address guy) external returns (uint256);
   function lump() external returns (uint256);
-  function lad() external returns (address);
+  function pit() external returns (address);
   function vow() external returns (address);
-  function flips(uint256 n) external returns (bytes32 ilk, address guy, uint256 ink, uint256 tab);
+  function flips(uint256 n) external returns (bytes32 ilk, address lad, uint256 ink, uint256 tab);
   function nflip() external returns (uint256);
   function file(bytes32 ilk, bytes32 what, int256 risk) external;
   function ilks(bytes32 ilk) external returns (int256 chop, address flip);
@@ -37,14 +37,14 @@ interface CatI {
 }
 
 contract Cat {
-  constructor (address vat_, address lad_, address vow_) public {
+  constructor (address vat_, address pit_, address vow_) public {
     assembly {
       codecopy(0, sub(codesize, 96), 96)
 
       // set vat = vat_
       sstore(0, mload(0))
 
-      // set lad = lad_
+      // set pit = pit_
       sstore(1, mload(32))
 
       // set vow = vow_
@@ -163,7 +163,7 @@ contract Cat {
           mstore(64, sload(3))
           return(64, 32)
         }
-        if eq(sig, 0x56cebd18 /*   function lad() external returns (address); */) {
+        if eq(sig, 0x56cebd18 /*   function pit() external returns (address); */) {
           mstore(64, sload(1))
           return(64, 32)
         }

@@ -21,7 +21,7 @@
 
 pragma solidity ^0.4.24;
 
-interface LadI {
+interface PitI {
   function vat() external returns (address);
   function frob(bytes32 ilk, int256 dink, int256 dart) external;
   function file(bytes32 ilk, bytes32 what, int256 risk) external;
@@ -31,7 +31,7 @@ interface LadI {
   function ilks(bytes32 ilk) external returns (int256 spot, int256 line);
 }
 
-contract Lad {
+contract Pit {
   constructor (address vat_) public {
     assembly {
       // set vat = vat_
