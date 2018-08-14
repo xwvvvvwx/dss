@@ -161,20 +161,6 @@ contract Pit {
         mstore(32, i)
         h := keccak256(0, 64)
       }
-      function hash3(b, i, j) -> h {
-        mstore(0, b)
-        mstore(32, i)
-        mstore(0, keccak256(0, 64))
-        mstore(32, j)
-        h := keccak256(0, 64)
-      }
-      // concatenate keys instead of recursively hashing
-      function hash3_alt(b, i, j) -> h {
-        mstore(0, b)
-        mstore(32, i)
-        mstore(64, j)
-        h := keccak256(0, 96)
-      }
       function iadd(x, y) -> z {
         z := add(x, y)
         if iszero(or(iszero(sgt(y, 0)), sgt(z, x))) { revert(0, 0) }

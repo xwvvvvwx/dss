@@ -304,14 +304,15 @@ contract Vat {
         mstore(32, i)
         h := keccak256(0, 64)
       }
+      // map[key1][key2] translates to hash(key2 ++ hash(key1 ++ idx(map)))
       function hash3(b, i, j) -> h {
-        mstore(0, b)
+        mstore(0, j)
         mstore(32, i)
-        mstore(0, keccak256(0, 64))
-        mstore(32, j)
+        mstore(64, b)
+        mstore(32, keccak256(32, 64))
         h := keccak256(0, 64)
       }
-      // concatenate keys instead of recursively hashing
+      // translates to hash(idx(map) ++ key1 ++ key2) 
       function hash3_alt(b, i, j) -> h {
         mstore(0, b)
         mstore(32, i)
