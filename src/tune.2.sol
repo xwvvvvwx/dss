@@ -85,7 +85,7 @@ contract Vat {
             let hash_0 := hash2(1, calldataload(4))
             
             // rad := wad * 10**27
-            let rad := imul(calldataload(68), 1000000000000000000000000000)
+            let rad := imul(1000000000000000000000000000, calldataload(68))
             
             // dai_src := dai[src] - rad
             let dai_src := isub(sload(hash_0), rad)
@@ -200,7 +200,7 @@ contract Vat {
           let hash_0 := hash2(1, calldataload(4))
           
           // rad := wad * 10**27
-          let rad := imul(calldataload(68), 1000000000000000000000000000)
+          let rad := imul(1000000000000000000000000000, calldataload(68))
           
           // dai_src := dai[src] - rad
           let dai_src := isub(sload(hash_0), rad)
@@ -247,7 +247,7 @@ contract Vat {
         let hash_0 := hash2(2, calldataload(4))
 
         // rad := wad * 10**27
-        let rad := imul(calldataload(68), 1000000000000000000000000000)
+        let rad := imul(1000000000000000000000000000, calldataload(68))
 
         // sin_u := sin[u]
         let sin_u := sload(hash_0)
