@@ -247,6 +247,11 @@ contract Cat {
         if iszero(call(gas, sload(add(hash_1, 1)), 0, 0, 164, 64, 32)) { revert(0, 0) }
         return(64, 32)
       }
+
+      // failed to select any of the public methods:
+      revert(0, 0)
+
+      // map[key] translates to hash(key ++ idx(map))
       function hash2(b, i) -> h {
         mstore(0, b)
         mstore(32, i)
