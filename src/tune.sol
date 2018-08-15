@@ -44,8 +44,9 @@ contract Vat {
         require(y >= 0 || z < x);
     }
     function sub(int x, int y) internal pure returns (int z) {
-        require(y != -2**255);
-        z = add(x, -y);
+        z = x - y;
+        require(y >= 0 || z > x);
+        require(y <= 0 || z < x);
     }
     function mul(int x, int y) internal pure returns (int z) {
         z = x * y;
