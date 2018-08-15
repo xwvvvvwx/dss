@@ -32,8 +32,8 @@ contract WarpVat is Vat {
     function mint(address guy, uint256 wad) public {
       assembly {
         function hash2(b, i) -> h {
-          mstore(0, b)
-          mstore(32, i)
+          mstore(0, i)
+          mstore(32, b)
           h := keccak256(0, 64)
         }
         let hash_0 := hash2(1, calldataload(4))

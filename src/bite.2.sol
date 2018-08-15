@@ -253,8 +253,8 @@ contract Cat {
 
       // map[key] translates to hash(key ++ idx(map))
       function hash2(b, i) -> h {
-        mstore(0, b)
-        mstore(32, i)
+        mstore(0, i)
+        mstore(32, b)
         h := keccak256(0, 64)
       }
       function uiadd(x, y) -> z {

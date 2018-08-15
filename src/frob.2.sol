@@ -156,9 +156,10 @@ contract Pit {
       // failed to select any of the public methods:
       revert(0, 0)
 
+      // map[key] translates to hash(key ++ idx(map))
       function hash2(b, i) -> h {
-        mstore(0, b)
-        mstore(32, i)
+        mstore(0, i)
+        mstore(32, b)
         h := keccak256(0, 64)
       }
       function imul(x, y) -> z {
