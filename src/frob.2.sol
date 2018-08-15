@@ -161,20 +161,12 @@ contract Pit {
         mstore(32, i)
         h := keccak256(0, 64)
       }
-      function iadd(x, y) -> z {
-        z := add(x, y)
-        if iszero(or(iszero(sgt(y, 0)), sgt(z, x))) { revert(0, 0) }
-        if iszero(or(iszero(slt(y, 0)), slt(z, x))) { revert(0, 0) }
-      }
-      function isub(x, y) -> z {
-        let minus_pow255 := sub(0, 57896044618658097711785492504343953926634992332820282019728792003956564819968)
-        if eq(y, minus_pow255) { revert(0, 0) }
-        z := iadd(x, sub(0, y))
-      }
       function imul(x, y) -> z {
         z := mul(x, y)
-        let minus_pow255 := sub(0, 57896044618658097711785492504343953926634992332820282019728792003956564819968)
-        if iszero(or(iszero(slt(y, 0)), iszero(eq(x, minus_pow255)))) { revert(0, 0) }
+        let minus_pow255 := 57896044618658097711785492504343953926634992332820282019728792003956564819968
+        // iff y >= 0 || x != -2^255
+        if and(slt(y, 0), eq(x, minus_pow255)) { revert(0, 0) }
+        // iff y == 0 || z / y == x
         if iszero(or(eq(y, 0), eq(sdiv(z, y), x))) { revert(0, 0) }
       }
     }
