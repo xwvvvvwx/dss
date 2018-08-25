@@ -26,8 +26,10 @@ contract Vat {
 
     // --- Data ---
     struct Ilk {
-        uint256  rate;  // ray
-        uint256  Art;   // wad
+        uint256 take;  // ray
+        uint256 rate;  // ray
+        uint256 Ink;   // wad
+        uint256 Art;   // wad
     }
     struct Urn {
         uint256 ink;    // wad
@@ -36,7 +38,7 @@ contract Vat {
 
     mapping (bytes32 => Ilk)                       public ilks;
     mapping (bytes32 => mapping (bytes32 => Urn )) public urns;
-    mapping (bytes32 => mapping (bytes32 => uint)) public gem;    // wad
+    mapping (bytes32 => mapping (bytes32 => uint)) public gem;    // rad
     mapping (bytes32 => uint256)                   public dai;    // rad
     mapping (bytes32 => uint256)                   public sin;    // rad
 
@@ -65,7 +67,9 @@ contract Vat {
     // --- Administration ---
     function init(bytes32 ilk) public auth {
         require(ilks[ilk].rate == 0);
+        require(ilks[ilk].take == 0);
         ilks[ilk].rate = 10 ** 27;
+        ilks[ilk].take = 10 ** 27;
     }
 
     // --- Fungibility ---
@@ -88,9 +92,10 @@ contract Vat {
 
         urn.ink = add(urn.ink, dink);
         urn.art = add(urn.art, dart);
+        ilk.Ink = add(ilk.Ink, dink);
         ilk.Art = add(ilk.Art, dart);
 
-        gem[i][v] = sub(gem[i][v], dink);
+        gem[i][v] = sub(gem[i][v], mul(ilk.take, dink));
         dai[w]    = add(dai[w],    mul(ilk.rate, dart));
         debt      = add(debt,      mul(ilk.rate, dart));
     }
@@ -102,9 +107,10 @@ contract Vat {
 
         urn.ink = add(urn.ink, dink);
         urn.art = add(urn.art, dart);
+        ilk.Ink = add(ilk.Ink, dink);
         ilk.Art = add(ilk.Art, dart);
 
-        gem[i][v] = sub(gem[i][v], dink);
+        gem[i][v] = sub(gem[i][v], mul(ilk.take, dink));
         sin[w]    = sub(sin[w],    mul(ilk.rate, dart));
         vice      = sub(vice,      mul(ilk.rate, dart));
     }
@@ -122,5 +128,10 @@ contract Vat {
         dai[u]   = add(dai[u], rad);
         debt     = add(debt,   rad);
         ilk.rate = add(ilk.rate, rate);
+    }
+    function toll(bytes32 ilk, bytes32 guy, int take) public auth {
+        Ilk storage i = ilks[ilk];
+        gem[ilk][guy] = sub(gem[ilk][guy], mul(i.Ink,  take));
+        i.take        = add(i.take, take);
     }
 }

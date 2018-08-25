@@ -37,15 +37,16 @@ contract Adapter {
         ilk = ilk_;
         gem = GemLike(gem_);
     }
+    int constant ONE = 10 ** 27;
     function join(uint wad) public {
         require(int(wad) >= 0);
         require(gem.transferFrom(msg.sender, this, wad));
-        vat.slip(ilk, bytes32(msg.sender), int(wad));
+        vat.slip(ilk, bytes32(msg.sender), int(wad) * ONE);
     }
     function exit(uint wad) public {
         require(int(wad) >= 0);
         require(gem.transferFrom(this, msg.sender, wad));
-        vat.slip(ilk, bytes32(msg.sender), -int(wad));
+        vat.slip(ilk, bytes32(msg.sender), -int(wad) * ONE);
     }
 }
 
@@ -56,12 +57,13 @@ contract ETHAdapter {
         vat = VatLike(vat_);
         ilk = ilk_;
     }
+    int constant ONE = 10 ** 27;
     function join() public payable {
-        vat.slip(ilk, bytes32(msg.sender), int(msg.value));
+        vat.slip(ilk, bytes32(msg.sender), int(msg.value) * ONE);
     }
     function exit(uint wad) public {
         require(int(wad) >= 0);
-        vat.slip(ilk, bytes32(msg.sender), -int(wad));
+        vat.slip(ilk, bytes32(msg.sender), -int(wad) * ONE);
         msg.sender.transfer(wad);
     }
 }

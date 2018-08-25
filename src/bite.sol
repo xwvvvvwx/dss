@@ -23,7 +23,7 @@ contract Flippy{
 }
 
 contract VatLike {
-    function ilks(bytes32) public view returns (uint,uint);
+    function ilks(bytes32) public view returns (uint,uint,uint,uint);
     function urns(bytes32,bytes32) public view returns (uint,uint);
     function grab(bytes32,bytes32,bytes32,bytes32,int,int) public returns (uint);
 }
@@ -59,17 +59,17 @@ contract Cat {
     mapping (uint256 => Flip) public flips;
     uint256                   public nflip;
 
-    address public vat;
-    address public pit;
-    address public vow;
+    VatLike public vat;
+    PitLike public pit;
+    VowLike public vow;
     uint256 public lump;  // fixed lot size
 
     // --- Init ---
     constructor(address vat_, address pit_, address vow_) public {
         wards[msg.sender] = true;
-        vat = vat_;
-        pit = pit_;
-        vow = vow_;
+        vat = VatLike(vat_);
+        pit = PitLike(pit_);
+        vow = VowLike(vow_);
     }
 
     // --- Math ---
@@ -98,14 +98,16 @@ contract Cat {
 
     // --- CDP Liquidation ---
     function bite(bytes32 ilk, bytes32 guy) public returns (uint) {
-        (uint rate, uint Art)           = VatLike(vat).ilks(ilk); Art;
-        (uint spot, uint line)          = PitLike(pit).ilks(ilk); line;
-        (uint ink , uint art) = VatLike(vat).urns(ilk, guy);
+        (uint take, uint rate, uint Ink, uint Art) = vat.ilks(ilk); Art; Ink; take;
+        (uint spot, uint line) = pit.ilks(ilk); line;
+        (uint ink , uint art)  = vat.urns(ilk, guy);
         uint tab = rmul(art, rate);
 
         require(rmul(ink, spot) < tab);  // !safe
 
-        VatLike(vat).grab(ilk, guy, bytes32(address(this)), bytes32(vow), -int(ink), -int(art));
+        VatLike(vat).grab(ilk, guy,
+                          bytes32(address(this)), bytes32(address(vow)),
+                          -int(ink), -int(art));
         VowLike(vow).fess(uint(tab));
 
         flips[nflip] = Flip(ilk, guy, uint(ink), uint(tab));

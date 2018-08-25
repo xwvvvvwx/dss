@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 contract VatLike {
-    function ilks(bytes32) public returns (uint,uint);
+    function ilks(bytes32) public returns (uint,uint,uint,uint);
     function fold(bytes32,bytes32,int) public;
 }
 
@@ -77,7 +77,7 @@ contract Drip {
     function drip(bytes32 ilk) public {
         Ilk storage i = ilks[ilk];
         require(era() >= i.rho);
-        (uint rate, uint Art) = vat.ilks(ilk); Art;
+        (uint take, uint rate, uint Ink, uint Art) = vat.ilks(ilk); Art; Ink; take;
         vat.fold(ilk, i.vow, diff(rmul(rpow(i.tax, era() - i.rho, ONE), rate), rate));
         i.rho = era();
     }

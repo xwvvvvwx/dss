@@ -91,7 +91,7 @@ contract Flipper {
         bids[id].gal = gal;
         bids[id].tab = tab;
 
-        vat.flux(ilk, bytes32(msg.sender), bytes32(address(this)), int(lot));
+        vat.flux(ilk, bytes32(msg.sender), bytes32(address(this)), mul(lot, ONE));
 
         return id;
     }
@@ -128,7 +128,7 @@ contract Flipper {
         require(mul(beg, lot) <= mul(bids[id].lot, ONE));
 
         vat.move(bytes32(msg.sender), bytes32(bids[id].guy), mul(bid, ONE));
-        vat.flux(ilk, bytes32(address(this)), bids[id].lad,  int(bids[id].lot - lot));
+        vat.flux(ilk, bytes32(address(this)), bids[id].lad,  mul(bids[id].lot - lot, ONE));
 
         bids[id].guy = msg.sender;
         bids[id].lot = lot;
@@ -137,7 +137,7 @@ contract Flipper {
     function deal(uint id) public {
         require(bids[id].tic < era() && bids[id].tic != 0 ||
                 bids[id].end < era());
-        vat.flux(ilk, bytes32(address(this)), bytes32(bids[id].guy), int(bids[id].lot));
+        vat.flux(ilk, bytes32(address(this)), bytes32(bids[id].guy), mul(bids[id].lot, ONE));
         delete bids[id];
     }
 }
