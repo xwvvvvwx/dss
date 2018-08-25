@@ -129,9 +129,9 @@ contract Vat {
         debt     = add(debt,   rad);
         ilk.rate = add(ilk.rate, rate);
     }
-    function toll(bytes32 ilk, bytes32 guy, int take) public auth {
-        Ilk storage i = ilks[ilk];
-        gem[ilk][guy] = sub(gem[ilk][guy], mul(i.Ink,  take));
-        i.take        = add(i.take, take);
+    function toll(bytes32 i, bytes32 u, int take) public auth {
+        Ilk storage ilk = ilks[i];
+        gem[i][u] = sub(gem[i][u], mul(ilk.Ink, take));
+        ilk.take  = add(ilk.take, take);
     }
 }
