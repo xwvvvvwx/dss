@@ -37,7 +37,7 @@ interface DripI {
   function drip(bytes32 ilk) external;
 }
 
-contract Drip {
+contract Drip2 {
   constructor (address vat_) public {
     assembly {
       let hash_0 := hash2(10, caller)

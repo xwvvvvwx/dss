@@ -43,7 +43,7 @@ interface VatI {
   function toll(bytes32 i, bytes32 u, int256 take) external;
 }
 
-contract Vat {
+contract Vat2 {
   constructor () public {
     assembly {
       let hash_0 := hash2(0, caller)

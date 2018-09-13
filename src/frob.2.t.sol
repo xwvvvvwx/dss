@@ -3,11 +3,11 @@ pragma solidity ^0.4.24;
 import "ds-test/test.sol";
 import "ds-token/token.sol";
 
-import {Vat, VatI} from './tune.2.sol';
+import {Vat2, VatI} from './tune.2.sol';
 import {Pit, PitI} from './frob.2.sol';
 import {Cat, CatI} from './bite.2.sol';
 import {Vow, VowI} from './heal.2.sol';
-import {Drip, DripI} from './drip.2.sol';
+import {Drip2, DripI} from './drip.2.sol';
 import {Dai20} from './transferFrom.sol';
 import {GemJoin, GemJoinI, ETHJoin, ETHJoinI, DaiJoin, DaiJoinI} from './join.2.sol';
 import {GemMove, DaiMove} from './move.sol';
@@ -23,7 +23,7 @@ contract WarpVatI is VatI {
     function mint(address guy, uint256 wad) external;
 }
 
-contract WarpVat is Vat {
+contract WarpVat is Vat2 {
     uint48 _era; function warp(uint48 era_) public { _era = era_; }
     function era() public view returns (uint48) { return _era; }
 
@@ -82,7 +82,7 @@ contract Frob2Test is DSTest {
         pit.file("gold", "spot", ray(1 ether));
         pit.file("gold", "line", 1000 ether);
         pit.file("Line", uint(1000 ether));
-        drip = DripI(new Drip(vat));
+        drip = DripI(new Drip2(vat));
         drip.init("gold");
         vat.rely(drip);
         pit.file("drip", drip);
@@ -297,7 +297,8 @@ contract Bite2Test is DSTest {
         vow.file("flop", address(flop));
         flop.rely(vow);
 
-        drip = DripI(new Drip(vat));
+
+        drip = DripI(new Drip2(vat));
         drip.init("gold");
         drip.file("vow", bytes32(address(vow)));
         vat.rely(drip);
@@ -451,7 +452,7 @@ contract Fold2Test is DSTest {
     }
 
     function setUp() public {
-        vat = VatI(new Vat());
+        vat = VatI(new Vat2());
         vat.init("gold");
     }
     function test_fold() public {

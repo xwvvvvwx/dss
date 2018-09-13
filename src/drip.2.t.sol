@@ -2,16 +2,16 @@ pragma solidity ^0.4.24;
 
 import "ds-test/test.sol";
 
-import {Drip, DripI} from "./drip.2.sol";
-import {Vat, VatI} from "./tune.2.sol";
+import {Drip2, DripI} from "./drip.2.sol";
+import {Vat2, VatI} from "./tune.2.sol";
 
 contract WarpDripI is DripI {
     function era() external returns (uint48 _era);
     function warp(uint48 era_) external;
 }
 
-contract WarpDrip is Drip {
-    constructor(address vat_) public Drip(vat_) {}
+contract WarpDrip is Drip2 {
+    constructor(address vat_) public Drip2(vat_) {}
     function warp(uint48 era_) public {
       assembly { sstore(99, era_) }
     }
@@ -40,7 +40,7 @@ contract Drip2Test is DSTest {
     }
 
     function setUp() public {
-        vat  = VatI(new Vat());
+        vat  = VatI(new Vat2());
         drip = WarpDripI(new WarpDrip(vat));
         vat.rely(drip);
         vat.init("i");
