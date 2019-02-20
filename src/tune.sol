@@ -246,7 +246,7 @@ contract Vat {
         debt     = add(debt,   rad);
     }
 
-    // inject or seize collateral
+    // take gems of type i from u and give them to everyone else by manipulating take
     function toll(bytes32 i, bytes32 u, int take) public note auth {
         // get ref to ilk i
         Ilk storage ilk = ilks[i];
