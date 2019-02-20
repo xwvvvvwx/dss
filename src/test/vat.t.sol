@@ -1,15 +1,16 @@
 pragma solidity >=0.5.0;
+pragma experimental ABIEncoderV2;
 
 import "ds-test/test.sol";
 import "ds-token/token.sol";
 
-import {Vat} from './tune.sol';
-import {Pit} from './frob.sol';
-import {Cat} from './bite.sol';
-import {Vow} from './heal.sol';
-import {Drip} from './drip.sol';
-import {GemJoin, ETHJoin, DaiJoin} from './join.sol';
-import {GemMove, DaiMove} from './move.sol';
+import {Vat} from '../vat.sol';
+import {Pit} from '../pit.sol';
+import {Cat} from '../cat.sol';
+import {Vow} from '../vow.sol';
+import {Jug} from '../jug.sol';
+import {GemJoin, ETHJoin, DaiJoin} from '../join.sol';
+import {GemMove, DaiMove} from '../move.sol';
 
 import {Flipper} from './flip.t.sol';
 import {Flopper} from './flop.t.sol';
@@ -24,10 +25,18 @@ contract TestVat is Vat {
     uint256 constant ONE = 10 ** 27;
     function mint(address guy, uint wad) public {
         dai[bytes32(bytes20(guy))] += wad * ONE;
-        debt              += wad * ONE;
+        debt += wad * ONE;
     }
     function balanceOf(address guy) public view returns (uint) {
         return dai[bytes32(bytes20(guy))] / ONE;
+    }
+}
+
+contract TestPit is Pit {
+    constructor(address vat) Pit(vat) public {}
+    function frob(bytes32 ilk, int dink, int dart) public {
+        bytes32 guy = bytes32(bytes20(msg.sender));
+        frob(ilk, guy, guy, guy, dink, dart);
     }
 }
 
@@ -60,16 +69,16 @@ contract Guy {
 
 contract FrobTest is DSTest {
     TestVat vat;
-    Pit     pit;
+    TestPit pit;
     DSToken gold;
-    Drip    drip;
+    Jug     drip;
 
     GemJoin gemA;
 
     function try_frob(bytes32 ilk, int ink, int art) public returns (bool ok) {
-        string memory sig = "frob(bytes32,bytes32,int256,int256)";
+        string memory sig = "frob(bytes32,bytes32,bytes32,bytes32,int256,int256)";
         bytes32 self = bytes32(bytes20(address(this)));
-        (ok,) = address(pit).call(abi.encodeWithSignature(sig, ilk, self, ink, art));
+        (ok,) = address(pit).call(abi.encodeWithSignature(sig, ilk, self, self, self, ink, art));
     }
 
     function ray(uint wad) internal pure returns (uint) {
@@ -78,7 +87,7 @@ contract FrobTest is DSTest {
 
     function setUp() public {
         vat = new TestVat();
-        pit = new Pit(address(vat));
+        pit = new TestPit(address(vat));
 
         gold = new DSToken("GEM");
         gold.mint(1000 ether);
@@ -89,7 +98,7 @@ contract FrobTest is DSTest {
         pit.file("gold", "spot", ray(1 ether));
         pit.file("gold", "line", 1000 ether);
         pit.file("Line", uint(1000 ether));
-        drip = new Drip(address(vat));
+        drip = new Jug(address(vat));
         drip.init("gold");
         vat.rely(address(drip));
 
@@ -314,11 +323,11 @@ contract BiteTest is DSTest {
     Hevm hevm;
 
     TestVat vat;
-    Pit     pit;
+    TestPit pit;
     Vow     vow;
     Cat     cat;
     DSToken gold;
-    Drip    drip;
+    Jug     drip;
 
     GemJoin gemA;
     GemMove gemM;
@@ -331,8 +340,9 @@ contract BiteTest is DSTest {
     DSToken gov;
 
     function try_frob(bytes32 ilk, int ink, int art) public returns (bool ok) {
-        string memory sig = "frob(bytes32,int256,int256)";
-        (ok,) = address(vat).call(abi.encodeWithSignature(sig, ilk, ink, art));
+        string memory sig = "frob(bytes32,bytes32,bytes32,bytes32,int256,int256)";
+        bytes32 self = bytes32(bytes20(address(this)));
+        (ok,) = address(pit).call(abi.encodeWithSignature(sig, ilk, self, self, self, ink, art));
     }
 
     function ray(uint wad) internal pure returns (uint) {
@@ -359,7 +369,7 @@ contract BiteTest is DSTest {
         gov.mint(100 ether);
 
         vat = new TestVat();
-        pit = new Pit(address(vat));
+        pit = new TestPit(address(vat));
         vat.rely(address(pit));
 
         daiM = new DaiMove(address(vat));
@@ -375,7 +385,7 @@ contract BiteTest is DSTest {
         vow.file("flop", address(flop));
         flop.rely(address(vow));
 
-        drip = new Drip(address(vat));
+        drip = new Jug(address(vat));
         drip.init("gold");
         drip.file("vow", bytes32(bytes20(address(vow))));
         vat.rely(address(drip));

@@ -1,4 +1,4 @@
-/// bite.sol -- Dai liquidation module
+/// cat.sol -- Dai liquidation module
 
 // Copyright (C) 2018 Rain <rainbreak@riseup.net>
 //
@@ -19,6 +19,11 @@ pragma solidity >=0.5.0;
 pragma experimental ABIEncoderV2;
 
 import "ds-note/note.sol";
+
+/*
+// CDP liquidation interface.
+// Keepers can use this module to liquidate unsafe CDP's and trigger collateral auctions.
+*/
 
 // Collateral -> DAI auction
 contract Flippy {
@@ -217,7 +222,7 @@ contract Cat is DSNote {
 
         // save amount of current outstanding debt
         uint tab = f.tab;
-        // calculate ammount of collateral to be sold
+        // take a portion of the collateral proportional to the fraction of debt to be covered
         uint ink = mul(f.ink, wad) / tab;
 
         // reduce outstanding debt by wad
