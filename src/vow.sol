@@ -120,7 +120,7 @@ contract Vow is DSNote {
     }
     // Unqueued, pre-auction debt
     function Woe() public view returns (uint) {
-        // Awe - Sin - Ash
+        // total debt - queued debt - unqueued debt
         return sub(sub(Awe(), Sin), Ash);
     }
 
