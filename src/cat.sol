@@ -190,10 +190,10 @@ contract Cat is DSNote {
         // - increase the vows bad debt balance by the value of the outstanding debt on urn
         vat.grab(ilk, urn, bytes32(bytes20(address(this))), bytes32(bytes20(address(vow))), -int(u.ink), -int(u.art));
 
-        // ?
+        // queue bad debt for auction
         vow.fess(tab);
 
-        // schedule collateral auction
+        // make collateral available for auction
         flips[nflip] = Flip(ilk, urn, u.ink, tab);
 
         // logging
@@ -230,21 +230,21 @@ contract Cat is DSNote {
         // reduce remaining collateral by ink
         f.ink -= ink;
 
-        // allow auction contract to move collateral tokens
+        // allow auction contract to move collateral tokens belonging to the cat
         Hopeful(Flippy(i.flip).gem()).hope(i.flip);
 
         // trigger collateral auction
-        id = Flippy(i.flip).kick({ urn: f.urn
-                                 , gal: address(vow)
-                                 , tab: rmul(wad, i.chop)
-                                 , lot: ink
-                                 , bid: 0
+        id = Flippy(i.flip).kick({ urn: f.urn             // cdp id
+                                 , gal: address(vow)      // profits -> vow
+                                 , tab: rmul(wad, i.chop) // take liquidation penalty
+                                 , lot: ink               // collateral available for sale
+                                 , bid: 0                 // starting price?
                                  });
 
         // logging
         emit FlipKick(n, id);
 
-        // auction contract cannot move collateral tokens
+        // auction contract cannot move collateral tokens belonging to the vat
         Hopeful(Flippy(i.flip).gem()).nope(i.flip);
     }
 }
