@@ -199,13 +199,13 @@ contract Vat {
         // get reference to relevant collateral type
         Ilk storage ilk = ilks[i];
 
-        // increment cdp debt by dink
+        // lock dink collateral
         urn.ink = add(urn.ink, dink);
-        // lock dart collateral
+        // create dart debt
         urn.art = add(urn.art, dart);
-        // increment total debt by dink
+        // increment total locked collateral by dink
         ilk.Ink = add(ilk.Ink, dink);
-        // increment total collateral by dart
+        // increment total created debt by dart
         ilk.Art = add(ilk.Art, dart);
 
         // decrement v's gem balance by dink * ilk.take
